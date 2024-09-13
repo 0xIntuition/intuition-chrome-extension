@@ -121,36 +121,38 @@ function displayResult(data) {
 
     div.innerHTML += `<div class="bg-slate-800 divide-y divide-slate-700 rounded-lg mt-2"><div class="flex items-center justify-between p-4 shadow-sm mt-1"><div class="flex items-center justify-between w-full"><span class="flex items-center"><span class="flex flex-col"><span class="text-md dark:text-slate-300">Staked</span><span class="text-xs dark:text-slate-400">Holders: ${thing.atom.vault.positionCount}</span></span></span><div class="flex-grow flex justify-center"></div><span class="flex flex-col items-end"><span class="text-slate-500 dark:text-slate-400 text-sm" title="${totalStaked.toFixed(6)} ETH">${(totalStaked * usd).toFixed(2)} USD</span></span></div></div></div>`;
 
-    div.innerHTML += `<h1 class="text-xl dark:text-slate-400 mt-4">Tags</h1>`;
 
     let tagsHTML = `<div class="bg-slate-800 divide-y divide-slate-700 rounded-lg mt-2">`;
 
     // filter where predicate is id 4
     const tags = thing.atom.asSubject.items.filter((item) => item.predicate.id === '4');
 
+    if (tags.length > 0) {
 
-    tags.forEach((tag) => {
-      tagsHTML += `<div class="flex items-center justify-between p-4 shadow-sm mt-1"><div class="flex items-center justify-between w-full"><span class="flex items-center"><span class="mr-4"><img src="${tag.object.image}" class="min-w-6 w-6 h-6 rounded-full object-cover object-center"></span><span class="flex flex-col"><span class="text-md dark:text-slate-300">${tag.object.label}</span><span class="text-xs dark:text-slate-400">Holders: ${tag.vault.positionCount.toString()} ${tag.counterVault.positionCount ? `, aginst: ${tag.counterVault.positionCount.toString()}` : ""}</span></span></span><div class="flex-grow flex justify-center"></div><span class="flex flex-col items-end"><span class="text-slate-500 dark:text-slate-400 text-sm" title="${(
-        (parseFloat(formatEther(tag.vault.currentSharePrice))
-          * parseFloat(formatEther(tag.vault.totalShares))
-        )
-        +
-        (parseFloat(formatEther(tag.counterVault.currentSharePrice))
-          * parseFloat(formatEther(tag.counterVault.totalShares))
-        )
-      ).toFixed(6)}">${(
-        (parseFloat(formatEther(tag.vault.currentSharePrice))
-          * parseFloat(formatEther(tag.vault.totalShares))
-          * usd)
-        +
-        (parseFloat(formatEther(tag.counterVault.currentSharePrice))
-          * parseFloat(formatEther(tag.counterVault.totalShares))
-          * usd)
-      ).toFixed(2)} USD</span></span></div></div>`;
-    });
+      tags.forEach((tag) => {
+        tagsHTML += `<div class="flex items-center justify-between p-4 shadow-sm mt-1"><div class="flex items-center justify-between w-full"><span class="flex items-center"><span class="mr-4"><img src="${tag.object.image}" class="min-w-6 w-6 h-6 rounded-full object-cover object-center"></span><span class="flex flex-col"><span class="text-md dark:text-slate-300">${tag.object.label}</span><span class="text-xs dark:text-slate-400">Holders: ${tag.vault.positionCount.toString()} ${tag.counterVault.positionCount ? `, aginst: ${tag.counterVault.positionCount.toString()}` : ""}</span></span></span><div class="flex-grow flex justify-center"></div><span class="flex flex-col items-end"><span class="text-slate-500 dark:text-slate-400 text-sm" title="${(
+          (parseFloat(formatEther(tag.vault.currentSharePrice))
+            * parseFloat(formatEther(tag.vault.totalShares))
+          )
+          +
+          (parseFloat(formatEther(tag.counterVault.currentSharePrice))
+            * parseFloat(formatEther(tag.counterVault.totalShares))
+          )
+        ).toFixed(6)}">${(
+          (parseFloat(formatEther(tag.vault.currentSharePrice))
+            * parseFloat(formatEther(tag.vault.totalShares))
+            * usd)
+          +
+          (parseFloat(formatEther(tag.counterVault.currentSharePrice))
+            * parseFloat(formatEther(tag.counterVault.totalShares))
+            * usd)
+        ).toFixed(2)} USD</span></span></div></div>`;
+      });
 
-    tagsHTML += `</div>`;
-    div.innerHTML += tagsHTML;
+      tagsHTML += `</div>`;
+      div.innerHTML += `<h1 class="text-xl dark:text-slate-400 mt-4">Tags</h1>`;
+      div.innerHTML += tagsHTML;
+    }
 
     resultDiv.appendChild(div)
 
