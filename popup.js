@@ -162,6 +162,12 @@ function displayResult(data) {
     button.classList.add('text-white', 'py-2', 'px-4', 'mt-4');
     resultDiv.appendChild(button);
 
+    const depositButton = document.createElement('button');
+    depositButton.onclick = () => deposit(thing.atomId);
+    depositButton.textContent = 'Deposit';
+    depositButton.classList.add('text-white', 'py-2', 'px-4', 'mt-4', 'ml-4');
+    resultDiv.appendChild(depositButton);
+
   } else {
     resultDiv.innerHTML += `<h1 class="text-xl dark:text-slate-400 mt-4">No data found for this URL</h1>`;
 
@@ -169,6 +175,10 @@ function displayResult(data) {
 
 }
 
+function parseEther(etherString) {
+    const etherInWei = BigInt(etherString) * BigInt(10 ** 18); 
+    return etherInWei.toString();
+  }
 
 function formatEther(wei) {
   // Convert the input to a string in case it's not already
@@ -194,4 +204,10 @@ function formatEther(wei) {
 
   // Handle no decimals case
   return trimmedDecimal ? `${integerPart}.${trimmedDecimal}` : `${integerPart}.0`;
+}
+
+async function deposit(atomId) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {action: "deposit", atomId: atomId});
+  });
 }
