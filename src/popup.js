@@ -1,3 +1,5 @@
+import {formatEther} from 'viem'
+
 document.addEventListener('DOMContentLoaded', function() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const currentUrl = tabs[0].url;
@@ -175,39 +177,8 @@ function displayResult(data) {
 
 }
 
-function parseEther(etherString) {
-    const etherInWei = BigInt(etherString) * BigInt(10 ** 18); 
-    return etherInWei.toString();
-  }
-
-function formatEther(wei) {
-  // Convert the input to a string in case it's not already
-  wei = wei.toString();
-
-  // Handle the case where input is 0
-  if (wei === "0") return "0.0";
-
-  // Ensure wei is a valid number
-  if (!/^\d+$/.test(wei)) throw new Error("Input should be a positive number in string or number format");
-
-  // Pad the string with leading zeros if necessary
-  while (wei.length < 18) {
-    wei = "0" + wei;
-  }
-
-  // Split the string into integer and decimal parts
-  const integerPart = wei.slice(0, wei.length - 18);
-  const decimalPart = wei.slice(wei.length - 18);
-
-  // Remove trailing zeros from the decimal part
-  const trimmedDecimal = decimalPart.replace(/0+$/, '');
-
-  // Handle no decimals case
-  return trimmedDecimal ? `${integerPart}.${trimmedDecimal}` : `${integerPart}.0`;
-}
-
 async function deposit(atomId) {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, {action: "deposit", atomId: atomId});
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { action: "deposit", atomId: atomId });
   });
 }

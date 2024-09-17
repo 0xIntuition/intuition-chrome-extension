@@ -1,0 +1,19 @@
+{
+  "name": "intuition-chrome-extension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.1.3+sha256.7f63001edc077f1cff96cacba901f350796287a2800dfa83fe898f94183e4f5f",
+  "devDependencies": {
+    "esbuild": "^0.23.1"
+  },
+  "dependencies": {
+    "viem": "^2.21.8"
+  }
+}

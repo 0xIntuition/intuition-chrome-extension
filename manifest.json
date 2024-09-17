@@ -9,17 +9,17 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "dist/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["dist/content.js"]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["injectScript.js"],
+      "resources": ["dist/injectScript.js"],
       "matches": ["<all_urls>"]
     }
   ],
@@ -28,4 +28,5 @@
     "48": "icon48.png",
     "128": "icon128.png"
   }
+
 }
