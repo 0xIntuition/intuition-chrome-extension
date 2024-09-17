@@ -3,7 +3,7 @@
   "name": "Intuition",
   "version": "1.0",
   "description": "Displays social reputation of the current URL",
-  "permissions": ["activeTab", "tabs", "scripting"],
+  "permissions": ["activeTab", "tabs", "scripting", "webNavigation"],
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html"
