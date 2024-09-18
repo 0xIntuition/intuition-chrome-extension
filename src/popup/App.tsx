@@ -1,137 +1,28 @@
-import React, { useEffect, useState, JSX } from 'react';
-import ReactDOM from 'react-dom';
-import { formatEther } from 'viem';
+import React, { useEffect, useState } from 'react';
+import { formatEther, parseEther } from 'viem';
+import { EthMultiVaultAbi } from './abi.js';
+import { GraphQLResponse } from './types.js';
+import { getThingsQuery } from './queries.js';
+import { client, publicClient } from './clients.js';
 
-interface Thing {
-  atomId: number;
-  url: string;
-  name: string;
-  image: string;
-  atom: {
-    value: {
-      thing: {
-        description: string;
-      };
-    };
-    vault: {
-      positionCount: number;
-      totalShares: string;
-      currentSharePrice: string;
-    };
-    asSubject: {
-      items: Array<{
-        object: {
-          id: string;
-          label: string;
-          emoji: string;
-          image: string;
-        };
-        predicate: {
-          emoji: string;
-          label: string;
-          image: string;
-          id: string;
-        };
-        counterVault: {
-          positionCount: number;
-          totalShares: string;
-          currentSharePrice: string;
-        };
-        vault: {
-          positionCount: number;
-          totalShares: string;
-          currentSharePrice: string;
-        };
-      }>;
-    };
-  };
-}
-
-interface ChainlinkPrice {
-  usd: number;
-}
-
-interface GraphQLResponse {
-  data: {
-    things: {
-      items: Thing[];
-    };
-    chainlinkPrices: {
-      items: ChainlinkPrice[];
-    };
-  };
-}
-
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const [data, setData] = useState<GraphQLResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refetch, setRefetch] = useState<boolean>(true);
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const currentUrl = tabs[0].url;
+    if (refetch) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const currentUrl = tabs[0].url;
       if (currentUrl) {
         fetchGraphQLData(currentUrl);
       }
-    });
-  }, []);
+      });
+      setRefetch(false);
+    }
+  }, [refetch]);
 
   const fetchGraphQLData = async (url: string) => {
-    const query = `
-      query GetThings($url: String) {
-        things(where: { url_starts_with: $url }) {
-          items {
-            atomId
-            url
-            name
-            image
-            atom {
-              value {
-                thing {
-                  description
-                }
-              }
-              vault {
-                positionCount
-                totalShares
-                currentSharePrice
-              }
-              asSubject {
-                items {
-                  object {
-                    id
-                    label
-                    emoji
-                    image
-                  }
-                  predicate {
-                    emoji
-                    label
-                    image
-                    id
-                  }
-                  counterVault {
-                    positionCount
-                    totalShares
-                    currentSharePrice
-                  }
-                  vault {
-                    positionCount
-                    totalShares
-                    currentSharePrice
-                  }
-                }
-              }
-            }
-          }
-        }
-        chainlinkPrices(limit: 1, orderBy: "id", orderDirection: "desc") {
-          items {
-            usd
-          }
-        }
-      }
-    `;
-
     try {
       const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
       const response = await fetch('https://i7n.app/graphql', {
@@ -140,7 +31,7 @@ const App: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: query,
+          query: getThingsQuery,
           variables: { url: cleanUrl },
         }),
       });
@@ -157,10 +48,37 @@ const App: React.FC = () => {
     chrome.tabs.create({ url: `https://i7n.app/a/${id}` });
   };
 
-  const deposit = (atomId: number) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id!, { action: "deposit", atomId: atomId });
-    });
+  const deposit = async (atomId: number) => {
+
+    try {
+      const accounts = await client.requestAddresses();
+      const account = accounts[0];
+      
+      // Replace this with the actual contract interaction
+      console.log(`Depositing for atom ${atomId} from account ${account}`);
+
+      const hash = await client.writeContract({
+        account: account,
+        abi: EthMultiVaultAbi,
+        address: '0x430BbF52503Bd4801E51182f4cB9f8F534225DE5',
+        functionName: 'depositAtom',
+        args: [account, BigInt(atomId)],
+        value: parseEther('0.00042'),
+      });
+      
+
+      console.log(`Transaction hash: ${hash}`);
+
+      const receipt = await publicClient.waitForTransactionReceipt({ hash });
+      console.log('Transaction receipt:', receipt);
+      // wait 1 second before refetching and updating the UI 
+      setTimeout(() => {
+        setRefetch(true);
+      }, 1000);
+    } catch (error) {
+      console.error('Error during deposit:', error);
+      setError('Error during deposit');
+    }
   };
 
   if (error) {
@@ -267,5 +185,3 @@ const App: React.FC = () => {
     </div>
   );
 };
-
-ReactDOM.render(<App />, document.getElementById('root'));

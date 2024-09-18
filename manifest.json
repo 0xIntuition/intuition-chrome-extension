@@ -19,7 +19,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["dist/injectScript.js"],
+      "resources": ["dist/in-page.js"],
       "matches": ["<all_urls>"]
     }
   ],
