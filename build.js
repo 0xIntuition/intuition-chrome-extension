@@ -1,7 +1,7 @@
 const esbuild = require('esbuild');
 
 esbuild.build({
-  entryPoints: ['src/popup.js', 'src/content.js', 'src/background.js', 'src/injectScript.js'],
+  entryPoints: ['src/popup.ts', 'src/content.ts', 'src/background.ts', 'src/injectScript.ts'],
   bundle: true,
   minify: true,
   sourcemap: true,

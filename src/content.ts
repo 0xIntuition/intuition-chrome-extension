@@ -1,6 +1,6 @@
 // Inject the script to interact with the Ethereum wallet
 const script = document.createElement('script');
-script.src = chrome.runtime.getURL('injectScript.js');
+script.src = chrome.runtime.getURL('dist/injectScript.js');
 (document.head || document.documentElement).appendChild(script);
 
 // Listen for messages from the popup

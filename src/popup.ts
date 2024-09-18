@@ -3,14 +3,16 @@ import {formatEther} from 'viem'
 document.addEventListener('DOMContentLoaded', function() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const currentUrl = tabs[0].url;
-    fetchGraphQLData(currentUrl);
+    if (currentUrl) {
+      fetchGraphQLData(currentUrl);
+    }
   });
 });
 
-function openAtom(id) {
+function openAtom(id: number) {
   chrome.tabs.create({ url: `https://i7n.app/a/${id}` });
 }
-async function fetchGraphQLData(url) {
+async function fetchGraphQLData(url: string) {
   const query = `
 query GetThings($url: String) {
   things(where: { url_starts_with: $url }) {
@@ -101,14 +103,18 @@ query GetThings($url: String) {
     displayResult(data);
   } catch (error) {
     console.error('Error:', error);
-    document.getElementById('result').textContent = 'Error fetching data';
+    document.getElementById('result')!.textContent = 'Error fetching data';
   }
 }
 
-function displayResult(data) {
+function displayResult(data: any) {
   const usd = data.data.chainlinkPrices.items[0].usd;
 
   const resultDiv = document.getElementById('result');
+  if (!resultDiv) {
+    console.error('Result div not found');
+    return;
+  }
   resultDiv.innerHTML = '';
 
   if (data.data.things.items.length > 0) {
@@ -127,11 +133,11 @@ function displayResult(data) {
     let tagsHTML = `<div class="bg-slate-800 divide-y divide-slate-700 rounded-lg mt-2">`;
 
     // filter where predicate is id 4
-    const tags = thing.atom.asSubject.items.filter((item) => item.predicate.id === '4');
+    const tags = thing.atom.asSubject.items.filter((item: any) => item.predicate.id === '4');
 
     if (tags.length > 0) {
 
-      tags.forEach((tag) => {
+      tags.forEach((tag: any) => {
         tagsHTML += `<div class="flex items-center justify-between p-4 shadow-sm mt-1"><div class="flex items-center justify-between w-full"><span class="flex items-center"><span class="mr-4"><img src="${tag.object.image}" class="min-w-6 w-6 h-6 rounded-full object-cover object-center"></span><span class="flex flex-col"><span class="text-md dark:text-slate-300">${tag.object.label}</span><span class="text-xs dark:text-slate-400">Holders: ${tag.vault.positionCount.toString()} ${tag.counterVault.positionCount ? `, aginst: ${tag.counterVault.positionCount.toString()}` : ""}</span></span></span><div class="flex-grow flex justify-center"></div><span class="flex flex-col items-end"><span class="text-slate-500 dark:text-slate-400 text-sm" title="${(
           (parseFloat(formatEther(tag.vault.currentSharePrice))
             * parseFloat(formatEther(tag.vault.totalShares))
@@ -177,8 +183,8 @@ function displayResult(data) {
 
 }
 
-async function deposit(atomId) {
+async function deposit(atomId: number) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { action: "deposit", atomId: atomId });
+    chrome.tabs.sendMessage(tabs[0].id!, { action: "deposit", atomId: atomId });
   });
 }
