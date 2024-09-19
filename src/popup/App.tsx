@@ -5,6 +5,7 @@ import { EthMultiVaultAbi } from './abi.js';
 import { getThingsQuery } from './queries.js';
 import { client, publicClient } from './clients.js';
 import { AccountImage } from '../AccountImage.js';
+import { Tag } from './Tag';
 
 export const App: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
@@ -97,85 +98,47 @@ export const App: React.FC = () => {
 
   return (
     <div className="bg-slate-950 p-2">
-      <div className="flex flex-col p-4 bg-slate-700 rounded-lg" style={{ backgroundImage: `url(../images/bg.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div className="flex flex-col p-4 rounded-lg" style={{ backgroundImage: `url(../images/bg.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="flex items-center space-x-4 mb-3">
           {thing.image && <img src={thing.image} className="w-16 h-16 rounded-full object-cover object-center" />}
           <div>
             <h2 className="text-xl font-bold text-slate-200">{thing.name}</h2>
-            <p className="text-sm text-slate-400">ID: {thing.atomId}</p>
+            <p className="">
+              <button onClick={() => openAtom(thing.atomId)} className="text-sm text-slate-400 hover:text-slate-200">
+                ID: {thing.atomId}
+              </button>
+            </p>
           </div>
         </div>
         <p className="text-sm text-slate-300 mt-2">{thing.atom.value?.thing?.description}</p>
-
-        <div className="flex flex-row mt-2 space-x-1 border-t border-gray-600 pt-4">
-          <button onClick={() => deposit(thing.atomId)} className="bg-slate-200 text-black text-xs p-0 px-2 rounded-full">Verify</button>
-          <div className="flex flex-row mr-3">
-            {thing.atom.vault.positions?.items.filter((position) => position.account.type === 'Default').map((position) => (
-              <div style={{ marginRight: '-6px' }}
-                key={position.account.id}>
-                <AccountImage
-                  id={position.account.id as `0x${string}`}
-                  image={position.account.image} />
-              </div>
-            ))}
-          </div>
-          <span className="text-xs dark:text-slate-400 pl-2">{numberOfRemainingPositions}</span>
-          {numberOfRemainingPositions && <span className="text-xs dark:text-slate-400 ml-1">∙</span>}
-          <span className="text-slate-500 dark:text-slate-400 text-xs " title={`${totalStaked.toFixed(6)} ETH`}>
-            {(totalStaked * usd).toFixed(2)} USD
-          </span>
-        </div>
-      </div>
-
-      {tags?.length > 0 && (
-        <>
-          <h1 className="text-xl dark:text-slate-400 mt-4">Tags</h1>
-          <div className="bg-slate-800 divide-y divide-slate-700 rounded-lg mt-2">
-            {tags.map((tag, index) => {
-              const tagTotalStaked = (
-                parseFloat(formatEther(BigInt(tag.vault.currentSharePrice))) *
-                parseFloat(formatEther(BigInt(tag.vault.totalShares))) +
-                parseFloat(formatEther(BigInt(tag.counterVault.currentSharePrice))) *
-                parseFloat(formatEther(BigInt(tag.counterVault.totalShares))
-                ));
-
-              return (
-                <div key={index} className="flex items-center justify-between p-4 shadow-sm mt-1" >
-                  <div className="flex items-center justify-between w-full">
-                    <span className="flex items-center">
-                      {tag.object.image && <span className="mr-4">
-                        <img src={tag.object.image} className="min-w-6 w-6 h-6 rounded-full object-cover object-center" />
-                      </span>}
-                      <span className="flex flex-col">
-                        <span className="text-md dark:text-slate-300">{tag.object.label}</span>
-                        <span className="text-xs dark:text-slate-400">
-                          Holders: {tag.vault.positionCount.toString()}
-                          {tag.counterVault.positionCount ? `, against: ${tag.counterVault.positionCount.toString()}` : ""}
-                        </span>
-                      </span>
-                    </span>
-                    <div className="flex-grow flex justify-center"></div>
-                    <span className="flex flex-col items-end">
-                      <span className="text-slate-500 dark:text-slate-400 text-sm" title={tagTotalStaked.toFixed(6)}>
-                        {(tagTotalStaked * usd).toFixed(2)} USD
-                      </span>
-                    </span>
-                  </div>
+        <div className="flex flex-row mt-2 space-x-1">
+          <button
+            title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom.vault.positionCount} accounts`}
+            onClick={() => deposit(thing.atomId)}
+            className="space-x-1 flex flex-row items-center bg-green-900 hover:bg-green-700 text-green-100 text-xs p-1 px-2 rounded-full">
+            <span className="text-sm">✓</span>
+            <div className="flex flex-row mr-3">
+              {thing.atom.vault.positions?.items.filter((position) => position.account.type === 'Default').map((position) => (
+                <div style={{ marginRight: '-6px' }}
+                  key={position.account.id}>
+                  <AccountImage
+                    id={position.account.id as `0x${string}`}
+                    image={position.account.image} />
                 </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-
-      <div className="mt-4">
-        <p className="text-slate-400">Account: {account}</p>
-      </div>
-      <div className="mt-4">
-        <button onClick={() => openAtom(thing.atomId)} className="text-white py-2 px-4 mr-4">
-          Details
-        </button>
-
+              ))}
+            </div>
+            <span className="pl-2">{numberOfRemainingPositions}</span>
+          </button>
+        </div>
+        <div className="flex flex-row flex-wrap gap-2 mt-2 space-x-1 border-t border-gray-800 pt-2">
+          {tags?.length > 0 && (tags.map((tag, index) => (
+            <Tag key={index} tag={tag} />
+          ))
+          )}
+          <button className="text-xs text-slate-400 hover:text-slate-200 bg-slate-800 hover:bg-slate-700 h-7 p-1 px-4 m-0 rounded-full">
+          Add tag
+          </button>
+        </div>
       </div>
     </div>
   );
