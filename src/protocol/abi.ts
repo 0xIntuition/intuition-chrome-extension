@@ -1,4 +1,4 @@
-export const EthMultiVaultAbi = [
+export const abi = [
   {
     "type": "fallback",
     "stateMutability": "payable"

@@ -1,24 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Address, parseEther } from 'viem';
+import { useMultiVault } from './intuition-react/useMultiVault';
 
 interface TagProps {
+  account?: Address;
   tag: {
     object: {
       image?: string | null;
       label?: string | null;
     };
     vault: {
+      id: string;
       positionCount: number;
     };
     counterVault: {
+      id: string;
       positionCount: number;
     };
   };
 }
 
-export const Tag: React.FC<TagProps> = ({ tag }) => {
+export const Tag: React.FC<TagProps> = ({ tag, account }) => {
+  const [bgClass, setBgClass] = useState('bg-transparent');
+  const [loading, setLoading] = useState(false);
+  const { multivault } = useMultiVault(account);
+
+  const depositTriple = async (vaultId: string) => {
+    console.log('depositTriple', vaultId);
+    setLoading(true);
+    const tx = await multivault.depositTriple(BigInt(vaultId), parseEther('0.00042'));
+    console.log(tx);
+    setLoading(false);
+  };
+
   return (
-    <div className="flex items-center  ">
-      <button className="flex items-center border border-green-900 border-r-0 text-green-100 hover:border-green-700 hover:bg-green-800 hover:text-green-200 text-xs rounded-l-full space-x-2 px-2 h-7 bg-transparent">
+    <div className={`flex items-center border rounded-full border-green-900 ${bgClass}`}>
+
+      <button
+        disabled={loading}
+        onClick={() => depositTriple(tag.vault.id)}
+        onMouseEnter={() => setBgClass('bg-green-900 border-green-900')}
+        onMouseLeave={() => setBgClass('bg-transparent border-green-900')}
+        className="flex items-center  text-green-100  text-xs rounded-l-full space-x-3 px-2 h-7 ">
       {tag.object.image && (
         <img
           src={tag.object.image}
@@ -26,10 +49,15 @@ export const Tag: React.FC<TagProps> = ({ tag }) => {
           className="w-6 h-6 rounded-full object-cover "
         />
       )}
-      <span className="text-xs text-slate-200 ml-2">{tag.object.label}</span>
-      <span className="text-xs text-slate-200 ml-4">{tag.vault.positionCount}</span>
+      <span className="text-xs text-slate-200 ml-2 ">{tag.object.label}</span>
+      <span className="text-xs text-slate-200 ">{tag.vault.positionCount}</span>
       </button>
-      <button className="border border-red-950 hover:border-red-700 hover:bg-red-800 text-red-400 hover:text-red-200 text-xs px-2 rounded-r-full flex h-full items-center space-x-2 h-7 bg-transparent border-l-0">
+      <button
+        disabled={loading}
+        onClick={() => depositTriple(tag.counterVault.id)}
+        onMouseEnter={() => setBgClass('bg-rose-900 border-rose-900')}
+        onMouseLeave={() => setBgClass('bg-transparent border-green-900')}
+        className="text-rose-400 hover:text-rose-200 text-xs px-2 flex h-full items-center space-x-2 h-7 ">
           {tag.counterVault.positionCount}
       </button>
     </div>

@@ -55,11 +55,13 @@ query GetThings($url: String) {
               id
             }
             counterVault {
+              id
               positionCount
               totalShares
               currentSharePrice
             }
             vault {
+              id
               positionCount
               totalShares
               currentSharePrice

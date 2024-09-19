@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { formatEther, parseEther } from 'viem';
+import { Address, formatEther, parseEther } from 'viem';
 import { useQuery } from '@apollo/client';
-import { EthMultiVaultAbi } from './abi.js';
 import { getThingsQuery } from './queries.js';
-import { client, publicClient } from './clients.js';
 import { AccountImage } from '../AccountImage.js';
 import { Tag } from './Tag';
+import { useMultiVault } from './intuition-react/useMultiVault.js';
 
 export const App: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
-  const [account, setAccount] = useState<string | null>(null);
+  const [account, setAccount] = useState<Address | undefined>(undefined);
+  const { multivault, client } = useMultiVault(account);
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -22,7 +22,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     const cachedAccount = localStorage.getItem('account');
     if (cachedAccount) {
-      setAccount(cachedAccount);
+      setAccount(cachedAccount as Address);
     }
   }, []);
 
@@ -38,10 +38,10 @@ export const App: React.FC = () => {
 
   const deposit = async (atomId: number) => {
     try {
-      let account: `0x${string}` | null = localStorage.getItem('account') as `0x${string}` | null;
+      let account: `0x${string}` | undefined = localStorage.getItem('account') as `0x${string}` | undefined;
       if (!account) {
-        const accounts = await client.requestAddresses();
-        account = accounts[0];
+        const accounts = await client?.requestAddresses();
+        account = accounts?.[0];
         if (!account) {
           throw new Error('No account found');
         }
@@ -51,27 +51,16 @@ export const App: React.FC = () => {
 
       console.log(`Depositing for atom ${atomId} from account ${account}`);
 
-
-      const hash = await client.writeContract({
-        account: account,
-        abi: EthMultiVaultAbi,
-        address: '0x430BbF52503Bd4801E51182f4cB9f8F534225DE5',
-        functionName: 'depositAtom',
-        args: [account, BigInt(atomId)],
-        value: parseEther('0.00042'),
-      });
-
+      const { hash } = await multivault.depositAtom(BigInt(atomId), parseEther('0.00042'));
 
       console.log(`Transaction hash: ${hash}`);
 
-      const receipt = await publicClient.waitForTransactionReceipt({ hash });
-      console.log('Transaction receipt:', receipt);
       // wait 1 second before refetching and updating the UI 
       setTimeout(() => {
         refetch();
       }, 1000);
-    } catch (error) {
-      console.error('Error during deposit:', error);
+    } catch (error: any) {
+      console.log('Error during deposit:', error.message);
     }
   };
 
@@ -94,7 +83,7 @@ export const App: React.FC = () => {
     * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
 
   const tags = thing.atom.asSubject?.items.filter((item) => item.predicate.id === '4') || [];
-  const numberOfRemainingPositions = thing.atom.vault.positionCount < 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
+  const numberOfRemainingPositions = thing.atom.vault.positionCount <= 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
 
   return (
     <div className="bg-slate-950 p-2">
@@ -113,7 +102,7 @@ export const App: React.FC = () => {
         <p className="text-sm text-slate-300 mt-2">{thing.atom.value?.thing?.description}</p>
         <div className="flex flex-row mt-3 space-x-1">
           <button
-            title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom.vault.positionCount} accounts`}
+            title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom.vault.positionCount - 1} accounts`}
             onClick={() => deposit(thing.atomId)}
             className="space-x-1 flex flex-row items-center bg-green-900 hover:bg-green-700 text-green-100 text-xs p-1 px-2 rounded-full">
             <span className="text-sm">✓</span>
@@ -132,7 +121,7 @@ export const App: React.FC = () => {
         </div>
         <div className="flex flex-row flex-wrap gap-2 mt-3 space-x-1 border-t border-slate-800 pt-3">
           {tags?.length > 0 && (tags.map((tag, index) => (
-            <Tag key={index} tag={tag} />
+            <Tag key={index} tag={tag} account={account} />
           ))
           )}
           <button className="flex items-center border border-green-900 text-green-100 hover:border-green-700 hover:bg-green-800 hover:text-green-200 text-xs rounded-full space-x-2 px-2 h-7 bg-transparent">
