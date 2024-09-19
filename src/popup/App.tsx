@@ -4,11 +4,12 @@ import { useQuery } from '@apollo/client';
 import { EthMultiVaultAbi } from './abi.js';
 import { getThingsQuery } from './queries.js';
 import { client, publicClient } from './clients.js';
+import { AccountImage } from '../AccountImage.js';
 
 export const App: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
-
   const [account, setAccount] = useState<string | null>(null);
+
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0]!.url;
@@ -92,9 +93,10 @@ export const App: React.FC = () => {
     * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
 
   const tags = thing.atom.asSubject?.items.filter((item) => item.predicate.id === '4') || [];
+  const numberOfRemainingPositions = thing.atom.vault.positionCount < 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
 
   return (
-    <div className="bg-slate-950 p-4">
+    <div className="bg-slate-950 p-2">
       <div className="flex flex-col p-4 bg-slate-700 rounded-lg" style={{ backgroundImage: `url(../images/bg.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="flex items-center space-x-4 mb-3">
           {thing.image && <img src={thing.image} className="w-16 h-16 rounded-full object-cover object-center" />}
@@ -104,24 +106,24 @@ export const App: React.FC = () => {
           </div>
         </div>
         <p className="text-sm text-slate-300 mt-2">{thing.atom.value?.thing?.description}</p>
-      </div>
 
-      <div className="bg-slate-800 divide-y divide-slate-700 rounded-lg mt-2">
-        <div className="flex items-center justify-between p-4 shadow-sm mt-1">
-          <div className="flex items-center justify-between w-full">
-            <span className="flex items-center">
-              <span className="flex flex-col">
-                <span className="text-md dark:text-slate-300">Staked</span>
-                <span className="text-xs dark:text-slate-400">Holders: {thing.atom.vault.positionCount}</span>
-              </span>
-            </span>
-            <div className="flex-grow flex justify-center"></div>
-            <span className="flex flex-col items-end">
-              <span className="text-slate-500 dark:text-slate-400 text-sm" title={`${totalStaked.toFixed(6)} ETH`}>
-                {(totalStaked * usd).toFixed(2)} USD
-              </span>
-            </span>
+        <div className="flex flex-row mt-2 space-x-1 border-t border-gray-600 pt-4">
+          <button onClick={() => deposit(thing.atomId)} className="bg-slate-200 text-black text-xs p-0 px-2 rounded-full">Verify</button>
+          <div className="flex flex-row mr-3">
+            {thing.atom.vault.positions?.items.filter((position) => position.account.type === 'Default').map((position) => (
+              <div style={{ marginRight: '-6px' }}
+                key={position.account.id}>
+                <AccountImage
+                  id={position.account.id as `0x${string}`}
+                  image={position.account.image} />
+              </div>
+            ))}
           </div>
+          <span className="text-xs dark:text-slate-400 pl-2">{numberOfRemainingPositions}</span>
+          {numberOfRemainingPositions && <span className="text-xs dark:text-slate-400 ml-1">∙</span>}
+          <span className="text-slate-500 dark:text-slate-400 text-xs " title={`${totalStaked.toFixed(6)} ETH`}>
+            {(totalStaked * usd).toFixed(2)} USD
+          </span>
         </div>
       </div>
 
@@ -173,9 +175,7 @@ export const App: React.FC = () => {
         <button onClick={() => openAtom(thing.atomId)} className="text-white py-2 px-4 mr-4">
           Details
         </button>
-        <button onClick={() => deposit(thing.atomId)} className="text-white py-2 px-4">
-          Deposit
-        </button>
+
       </div>
     </div>
   );

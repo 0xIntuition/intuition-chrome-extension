@@ -33,6 +33,7 @@ query GetThings($url: String) {
               shares
               account {
                 id
+                type
                 image
                 label
               }
