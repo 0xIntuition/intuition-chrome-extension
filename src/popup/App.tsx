@@ -97,21 +97,21 @@ export const App: React.FC = () => {
   const numberOfRemainingPositions = thing.atom.vault.positionCount < 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
 
   return (
-    <div className="bg-black p-2">
-      <div className="flex flex-col p-4 rounded-lg" style={{ backgroundImage: `url(../images/bg.png)`, backgroundSize: 'auto', backgroundPosition: 'center' }}>
+    <div className="bg-slate-950 p-2">
+      <div className="flex flex-col p-4 bg-slate-900 rounded-lg">
         <div className="flex items-center space-x-4 mb-3">
           {thing.image && <img src={thing.image} className="w-16 h-16 rounded-full object-cover object-center" />}
           <div>
             <h2 className="text-xl font-bold text-slate-200">{thing.name}</h2>
             <p className="">
-              <button onClick={() => openAtom(thing.atomId)} className="text-xs text-slate-400 hover:text-slate-200">
+              <button onClick={() => openAtom(thing.atomId)} className="text-xs text-slate-600 hover:text-slate-400">
                 did:i7n:84532:{thing.atomId}
               </button>
             </p>
           </div>
         </div>
         <p className="text-sm text-slate-300 mt-2">{thing.atom.value?.thing?.description}</p>
-        <div className="flex flex-row mt-2 space-x-1">
+        <div className="flex flex-row mt-3 space-x-1">
           <button
             title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom.vault.positionCount} accounts`}
             onClick={() => deposit(thing.atomId)}
@@ -130,13 +130,15 @@ export const App: React.FC = () => {
             <span className="pl-2">{numberOfRemainingPositions}</span>
           </button>
         </div>
-        <div className="flex flex-row flex-wrap gap-2 mt-2 space-x-1 border-t border-gray-800 pt-2">
+        <div className="flex flex-row flex-wrap gap-2 mt-3 space-x-1 border-t border-slate-800 pt-3">
           {tags?.length > 0 && (tags.map((tag, index) => (
             <Tag key={index} tag={tag} />
           ))
           )}
-          <button className="text-xs text-slate-400 hover:text-slate-200 bg-slate-800 hover:bg-slate-700 h-7 p-1 px-4 m-0 rounded-full">
-          Add tag
+          <button className="flex items-center border border-green-900 text-green-100 hover:border-green-700 hover:bg-green-800 hover:text-green-200 text-xs rounded-full space-x-2 px-2 h-7 bg-transparent">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+            </svg>
           </button>
         </div>
       </div>
