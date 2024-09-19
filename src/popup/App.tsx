@@ -97,15 +97,15 @@ export const App: React.FC = () => {
   const numberOfRemainingPositions = thing.atom.vault.positionCount < 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
 
   return (
-    <div className="bg-slate-950 p-2">
-      <div className="flex flex-col p-4 rounded-lg" style={{ backgroundImage: `url(../images/bg.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className="bg-black p-2">
+      <div className="flex flex-col p-4 rounded-lg" style={{ backgroundImage: `url(../images/bg.png)`, backgroundSize: 'auto', backgroundPosition: 'center' }}>
         <div className="flex items-center space-x-4 mb-3">
           {thing.image && <img src={thing.image} className="w-16 h-16 rounded-full object-cover object-center" />}
           <div>
             <h2 className="text-xl font-bold text-slate-200">{thing.name}</h2>
             <p className="">
-              <button onClick={() => openAtom(thing.atomId)} className="text-sm text-slate-400 hover:text-slate-200">
-                ID: {thing.atomId}
+              <button onClick={() => openAtom(thing.atomId)} className="text-xs text-slate-400 hover:text-slate-200">
+                did:i7n:84532:{thing.atomId}
               </button>
             </p>
           </div>
