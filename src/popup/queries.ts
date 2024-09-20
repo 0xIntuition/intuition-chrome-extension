@@ -11,7 +11,7 @@ export const getMyPositionQuery = gql(/* GraphQL */ `
 `);
 
 export const getThingsQuery = gql(/* GraphQL */ `
-query GetThings($url: String) {
+query GetThings($url: String, $address: String) {
   things(where: { url_starts_with: $url }) {
     items {
       atomId
@@ -28,6 +28,12 @@ query GetThings($url: String) {
           positionCount
           totalShares
           currentSharePrice
+          myPosition: positions(limit: 1, where: { accountId: $address }) {
+            items {
+              shares
+							accountId
+            }
+          }
           positions(orderBy: "shares", orderDirection: "desc", limit: 5) {
             items {
               shares
@@ -59,12 +65,24 @@ query GetThings($url: String) {
               positionCount
               totalShares
               currentSharePrice
+              myPosition: positions(limit: 1, where: { accountId: $address }) {
+                items {
+                  shares
+                  accountId
+                }
+              }
             }
             vault {
               id
               positionCount
               totalShares
               currentSharePrice
+              myPosition: positions(limit: 1, where: { accountId: $address }) {
+                items {
+                  shares
+                  accountId
+                }
+              }
             }
           }
         }
