@@ -48,6 +48,7 @@ query GetThings($url: String, $address: String) {
         }
         asSubject {
           items {
+            id
             object {
               id
               label
@@ -92,6 +93,83 @@ query GetThings($url: String, $address: String) {
   chainlinkPrices(limit: 1, orderBy: "id", orderDirection: "desc") {
     items {
       usd
+    }
+  }
+}
+`);
+
+export const getThingsExtendedQuery = gql(/* GraphQL */ `
+query GetThingsExtended($url: String) {
+  things(where: { url_starts_with: $url }) {
+    items {
+      atomId
+      url
+      name
+      image
+      atom {
+        value {
+          thing {
+            description
+          }
+        }
+        vault {
+          positionCount
+          totalShares
+          currentSharePrice
+          positions {
+            items {
+              shares
+              account {
+                id
+                type
+                image
+                label
+              }
+            }
+          }
+        }
+        asSubject {
+          items {
+            id
+            object {
+              id
+              label
+              emoji
+              image
+            }
+            predicate {
+              emoji
+              label
+              image
+              id
+            }
+            counterVault {
+              id
+              positionCount
+              totalShares
+              currentSharePrice
+              positions{
+                items {
+                  shares
+                  accountId
+                }
+              }
+            }
+            vault {
+              id
+              positionCount
+              totalShares
+              currentSharePrice
+              positions{
+                items {
+                  shares
+                  accountId
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

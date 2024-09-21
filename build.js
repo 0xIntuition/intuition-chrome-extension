@@ -12,6 +12,6 @@ esbuild.build({
   sourcemap: true,
   outdir: 'dist',
   target: ['es2020'],
-  format: 'iife',
+  format: 'esm',
   loader: { '.tsx': 'tsx' },
 }).catch(() => process.exit(1));

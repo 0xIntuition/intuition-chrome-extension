@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node build.js",
     "build:css": "tailwindcss  -i ./input.css -o ./style.css --minify",
+    "cp:graphview": "cp ../graphviz-poc/packages/wasm-graph-view/pkg/wasm_graph_view_bg* ./dist/popup",
     "codegen": "graphql-codegen"
   },
   "keywords": [],
@@ -27,7 +28,9 @@
     "graphql": "^16.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "viem": "^2.21.8"
+    "react-router-dom": "^6.26.2",
+    "viem": "^2.21.8",
+    "wasm-graph-view": "link:../graphviz-poc/packages/wasm-graph-view/pkg"
   },
   "packageManager": "pnpm@9.1.3+sha256.7f63001edc077f1cff96cacba901f350796287a2800dfa83fe898f94183e4f5f"
 }

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/in-page.ts"],
+  "sourcesContent": ["// Create an invisible iframe to communicate with i7n.app\nconst iframe = document.createElement('iframe');\niframe.src = 'https://i7n.app/static/iframe.html';\niframe.style.display = 'none';\ndocument.body.appendChild(iframe);\n\n// Set up a message event listener\nwindow.addEventListener(\"message\", (event) => {\n  // Handle messages from the popup\n  if (event.data.type === \"FROM_POPUP\") {\n    // Find the iframe we created earlier\n    const iframe = document.querySelector('iframe[src^=\"https://i7n.app/static/iframe.html\"]');\n    if (iframe) {\n      // Forward the message from the popup to the iframe\n      (iframe as HTMLIFrameElement).contentWindow?.postMessage(event.data, \"https://i7n.app\");\n    }\n  } \n  // Handle messages from the iframe\n  else if (event.origin === \"https://i7n.app\" && event.data.type === \"FROM_IFRAME\") {\n    // Forward the message from the iframe to the window\n    window.postMessage(event.data, \"*\");\n  }\n});\n"],
+  "mappings": "AACA,IAAMA,EAAS,SAAS,cAAc,QAAQ,EAC9CA,EAAO,IAAM,qCACbA,EAAO,MAAM,QAAU,OACvB,SAAS,KAAK,YAAYA,CAAM,EAGhC,OAAO,iBAAiB,UAAYC,GAAU,CAE5C,GAAIA,EAAM,KAAK,OAAS,aAAc,CAEpC,IAAMD,EAAS,SAAS,cAAc,mDAAmD,EACrFA,GAEDA,EAA6B,eAAe,YAAYC,EAAM,KAAM,iBAAiB,CAE1F,MAESA,EAAM,SAAW,mBAAqBA,EAAM,KAAK,OAAS,eAEjE,OAAO,YAAYA,EAAM,KAAM,GAAG,CAEtC,CAAC",
+  "names": ["iframe", "event"]
+}

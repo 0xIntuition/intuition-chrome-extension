@@ -1,0 +1,2 @@
+var a=document.createElement("iframe");a.src="https://i7n.app/static/iframe.html";a.style.display="none";document.body.appendChild(a);window.addEventListener("message",t=>{if(t.data.type==="FROM_POPUP"){let e=document.querySelector('iframe[src^="https://i7n.app/static/iframe.html"]');e&&e.contentWindow?.postMessage(t.data,"https://i7n.app")}else t.origin==="https://i7n.app"&&t.data.type==="FROM_IFRAME"&&window.postMessage(t.data,"*")});
+//# sourceMappingURL=in-page.js.map

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/background.ts"],
+  "sourcesContent": ["// Listen for when the extension icon is clicked\nchrome.action.onClicked.addListener((tab) => {\n    // Send a message to the content script of the active tab\n    chrome.tabs.sendMessage(tab.id!, { action: \"getUrl\" });\n});\n"],
+  "mappings": "AACA,OAAO,OAAO,UAAU,YAAaA,GAAQ,CAEzC,OAAO,KAAK,YAAYA,EAAI,GAAK,CAAE,OAAQ,QAAS,CAAC,CACzD,CAAC",
+  "names": ["tab"]
+}
