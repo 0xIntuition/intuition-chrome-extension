@@ -7,7 +7,10 @@
     "build": "node build.js",
     "build:css": "tailwindcss  -i ./input.css -o ./style.css --minify",
     "cp:graphview": "cp ../graphviz-poc/packages/wasm-graph-view/pkg/wasm_graph_view_bg* ./dist/popup",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "build:watch": "npm-run-all --parallel build:ts:watch build:css:watch",
+    "build:ts:watch": "node build.js --watch",
+    "build:css:watch": "tailwindcss -i ./input.css -o ./style.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +20,7 @@
     "@types/react": "^18.3.7",
     "@types/react-dom": "^18.3.0",
     "esbuild": "^0.23.1",
+    "npm-run-all": "^4.1.5",
     "tailwindcss": "^3.4.12"
   },
   "dependencies": {

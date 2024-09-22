@@ -1,6 +1,8 @@
 const esbuild = require('esbuild');
 
-esbuild.build({
+const watchMode = process.argv.includes('--watch');
+
+const buildOptions = {
   entryPoints: [
     'src/popup/index.tsx',
     'src/content.ts',
@@ -14,4 +16,13 @@ esbuild.build({
   target: ['es2020'],
   format: 'esm',
   loader: { '.tsx': 'tsx' },
-}).catch(() => process.exit(1));
+};
+
+if (watchMode) {
+  esbuild.context(buildOptions).then(context => {
+    context.watch();
+    console.log('Watching for changes...');
+  });
+} else {
+  esbuild.build(buildOptions).catch(() => process.exit(1));
+}
