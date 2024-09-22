@@ -174,3 +174,49 @@ query GetThingsExtended($url: String) {
   }
 }
 `);
+
+
+export const getMyPositionsQuery = gql(/* GraphQL */ `
+query GetMyPositions($address: String) {
+  positions(where: { accountId: $address }) {
+    items {
+      id
+      shares
+      vault {
+        positionCount
+        totalShares
+        currentSharePrice
+        atom {
+          id
+          label
+          image
+        }
+        triple {
+          id
+          label
+          subject {
+            id
+            image
+            label
+            value {
+              thing {
+                url
+              }
+            }
+          }
+          predicate {
+            id
+            image
+            label
+          }
+          object {
+            id
+            image
+            label
+          }
+        }
+      }
+    }
+  }
+}
+`);
