@@ -8,9 +8,7 @@ export function useMultiVault(account?: `0x${string}`) {
   const [client, setClient] = useState<WalletClient | undefined>(undefined);
 
   useEffect(() => {
-    if (!account) {
-      return;
-    }
+
     const client = createWalletClient({
       chain: base,  // Use the Base chain
       account,
