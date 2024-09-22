@@ -5,14 +5,35 @@ import init, { show_graph } from "wasm-graph-view";
 import { getThingsExtendedQuery } from './queries';
 import OpenAI from 'openai';
 import Markdown from 'react-markdown'
-const openai = new OpenAI({
-  apiKey: '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',
-  dangerouslyAllowBrowser: true
-});
+
+
+
+
+export const Graph: React.FC = () => {
+  const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
+  const [account, setAccount] = useState<Address | undefined>(undefined);
+  const [summarizing, setSummarizing] = useState<boolean>(false);
+  const [summary, setSummary] = useState<string>("");
+  const [openai, setOpenai] = useState<OpenAI | null>(null);
+
+
+
+useEffect(() => {
+  const apiKey = localStorage.getItem('openaiApiKey');
+  if (apiKey) {
+    setOpenai(new OpenAI({
+      apiKey: apiKey,
+      dangerouslyAllowBrowser: true
+    }));
+  }
+}, []);
 
 async function generateSummary(data: any): Promise<string> {
+  if (!openai) {
+    return "OpenAI API key not set. Please configure it in the settings.";
+  }
   try {
-    const response = await openai.chat.completions.create({
+    const response = await openai?.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: "You are a helpful assistant that summarizes graph data." },
@@ -21,18 +42,12 @@ async function generateSummary(data: any): Promise<string> {
       max_tokens: 2048
     });
 
-    return response.choices[0].message.content || "Unable to generate summary.";
-  } catch (error) {
+    return response?.choices[0]?.message?.content || "Unable to generate summary.";
+  } catch (error: any) {
     console.error("Error generating summary:", error);
-    return "Error generating summary.";
+    return "Error generating summary. " + error;
   }
 }
-
-export const Graph: React.FC = () => {
-  const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
-  const [account, setAccount] = useState<Address | undefined>(undefined);
-  const [summarizing, setSummarizing] = useState<boolean>(false);
-  const [summary, setSummary] = useState<string>("");
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -166,9 +181,9 @@ export const Graph: React.FC = () => {
 
   return (
     <div className="p-4 bg-slate-900 text-slate-200 min-h-screen">
-       <canvas id="viz" className="w-full h-64"></canvas>
-       {loading && <p className="text-slate-400">Loading...</p>}
-       {summarizing && <p className="text-slate-400">Summarizing...</p>}
+       <canvas id="viz" className="rounded-md"></canvas>
+       {loading && <p className="text-slate-400 mt-4">Loading...</p>}
+       {summarizing && <p className="text-slate-400 mt-4">Summarizing...</p>}
       {!summarizing && !loading && <Markdown
         components={{
           img: ({node, ...props}) => <img {...props} style={{maxHeight: '1em'}} />  
