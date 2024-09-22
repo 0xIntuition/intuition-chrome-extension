@@ -138,8 +138,13 @@ export const Graph: React.FC = () => {
         
         console.log(JSON.stringify(uniqueNodes));
         console.log(JSON.stringify(uniqueEdges));
+        const settings = {
+          resolution: [318, 200],
+          initial_camera_location: [0.0, 0.0, 10.0],
+          clear_color: [2.0 / 255.0, 6.0 / 255.0, 23.0 / 255.0]
+        };
 
-        show_graph("viz", JSON.stringify(uniqueNodes), JSON.stringify(uniqueEdges));
+        show_graph("viz", JSON.stringify(uniqueNodes), JSON.stringify(uniqueEdges), JSON.stringify(settings));
 
 
       }).catch(console.error);
@@ -160,7 +165,7 @@ export const Graph: React.FC = () => {
   }, [data]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-slate-900 text-slate-200 min-h-screen">
        <canvas id="viz" className="w-full h-64"></canvas>
        {loading && <p className="text-slate-400">Loading...</p>}
        {summarizing && <p className="text-slate-400">Summarizing...</p>}
