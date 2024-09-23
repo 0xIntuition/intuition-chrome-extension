@@ -220,3 +220,26 @@ query GetMyPositions($address: String) {
   }
 }
 `);
+
+export const searchAtomsQuery = gql(/* GraphQL */ `
+query SearchAtoms($label: String!, $after: String) {
+  atoms(
+    orderBy: "blockTimestamp"
+    after: $after
+    orderDirection: "desc"
+    limit: 30
+    where: { type_in: [Thing, Person, Organization], label_contains: $label }
+  ) {
+    items {
+      id
+      image
+      label
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      startCursor
+    }
+  }
+}
+`);

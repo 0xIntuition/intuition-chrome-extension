@@ -5,11 +5,16 @@ import { getThingsQuery } from './queries.js';
 import { AccountImage } from '../AccountImage.js';
 import { Tag } from './Tag.js';
 import { useMultiVault } from './intuition-react/useMultiVault.js';
+import { TagSearch } from './TagSearch';
+import { Spinner } from './Spinner.js';
 
 export const Home: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
   const [account, setAccount] = useState<Address | undefined>(undefined);
   const { multivault, client } = useMultiVault(account);
+  const [showTagSearch, setShowTagSearch] = useState(false);
+  const [selectedTag, setSelectedTag] = useState<any>(null);
+
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -38,7 +43,29 @@ export const Home: React.FC = () => {
     chrome.tabs.create({ url: `https://i7n.app/a/${id}` });
   };
 
+  const handleTagSelected = async(tag: any) => {
+    console.log('tag selected', tag);
+    setSelectedTag(tag);
+    setShowTagSearch(false);
+    const subjectId = BigInt(thing.atomId);
+    const predicateId = BigInt(4);
+    const objectId = BigInt(tag.id);
 
+    // check if triple exists
+    const tripleExists = await multivault.getTripleIdFromAtoms(subjectId, predicateId, objectId);
+    if (tripleExists) {
+      console.log('Triple exists');
+      await multivault.depositTriple(tripleExists, parseEther('0.00042'));
+    } else {
+      console.log('Triple does not exist');
+       await multivault.createTriple({subjectId, predicateId, objectId, initialDeposit: parseEther('0.00042')});
+    }
+
+    setTimeout(() => {
+      setSelectedTag(null);
+      refetch();
+    }, 1000);
+  };
 
 
   if (error) {
@@ -130,7 +157,7 @@ export const Home: React.FC = () => {
           <button
             title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom.vault.positionCount - 1} accounts \n My position: ${myPositionInEth.toFixed(6)} ETH (${(myPositionInEth * usd).toFixed(2)} USD)`}
             onClick={() => handleAtomClick(thing.atomId)}
-            className={`space-x-1 flex flex-row items-center border border-slate-800 hover:bg-slate-700 text-green-100 text-xs p-1 px-2 rounded-full ${myPosition ? 'bg-slate-800' : 'bg-transparent'}`}>
+            className={`space-x-1 flex flex-row items-center border border-sky-800 hover:bg-sky-700 text-green-100 text-xs p-1 px-2 rounded-full ${myPosition ? 'bg-sky-800' : 'bg-transparent'}`}>
             <span className="text-sm">✓</span>
             <div className="flex flex-row mr-3">
               {thing.atom.vault.positions?.items.filter((position) => position.account.type === 'Default').map((position) => (
@@ -147,14 +174,19 @@ export const Home: React.FC = () => {
         </div>
         <div className="flex flex-row flex-wrap gap-2 mt-3 space-x-1 border-t border-slate-800 pt-3">
           {tags?.length > 0 && (tags.map((tag, index) => (
-            <Tag key={index} tag={tag} account={account} />
+            <Tag key={index} tag={tag} account={account} refetch={refetch} />
           ))
           )}
-          <button className="flex items-center border border-slate-800 text-slate-100 hover:border-slate-700 hover:bg-slate-700 hover:text-slate-200 text-xs rounded-full space-x-2 px-2 h-7 bg-transparent">
+          <button onClick={() => setShowTagSearch(!showTagSearch)}className="flex items-center border border-slate-800 text-slate-100 hover:border-slate-700 hover:bg-slate-700 hover:text-slate-200 text-xs rounded-full space-x-2 px-2 h-7 bg-transparent">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
             </svg>
           </button>
+          {showTagSearch && <TagSearch onSelected={handleTagSelected} />}
+          {selectedTag && <div className="flex items-center bg-sky-800 border-slate-800 border text-slate-100 hover:border-slate-700 hover:bg-slate-700 hover:text-slate-200 text-xs rounded-full space-x-2 px-2 h-7">
+            <Spinner />
+            <span>{selectedTag.label}</span>
+          </div>}
         </div>
       </div>
     </div>

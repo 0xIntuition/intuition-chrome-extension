@@ -16,7 +16,7 @@ export const Settings: React.FC = () => {
 
   return (
     <div className="p-4 bg-slate-900 text-slate-200 min-h-screen">
-      <h1 className="text-2xl mb-4">Settings</h1>
+      <h1 className="text-xl mb-4">Settings</h1>
       
       <div className="mb-4">
         <label className="block mb-2">OpenAI API Key:</label>

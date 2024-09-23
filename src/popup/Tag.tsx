@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Address, formatEther, parseEther } from 'viem';
 import { useMultiVault } from './intuition-react/useMultiVault';
+import { Spinner } from './Spinner';
 
 interface TagProps {
+  refetch: () => void;
   account?: Address;
   tag: {
     object: {
@@ -34,7 +36,7 @@ interface TagProps {
   };
 }
 
-export const Tag: React.FC<TagProps> = ({ tag, account }) => {
+export const Tag: React.FC<TagProps> = ({ tag, account, refetch }) => {
   const { multivault } = useMultiVault(account);
   const [bgClass, setBgClass] = useState('bg-transparent border-slate-800');
   const [loading, setLoading] = useState(false);
@@ -51,7 +53,7 @@ export const Tag: React.FC<TagProps> = ({ tag, account }) => {
 
   const handleTagClick = (isCounterVault: boolean) => {
     if (myPosition) {
-      setBgClass('bg-slate-800 border-slate-800')
+      setBgClass('bg-sky-800 border-slate-800')
       redeemTriple(tag.vault.id, myPosition);
     } else if (myCounterPosition) {
       setBgClass('bg-rose-900 border-rose-900')
@@ -60,7 +62,7 @@ export const Tag: React.FC<TagProps> = ({ tag, account }) => {
       setBgClass('bg-rose-900 border-rose-900')
       depositTriple(tag.counterVault.id);
     } else {
-      setBgClass('bg-slate-800 border-slate-800')
+      setBgClass('bg-sky-800 border-slate-800')
       depositTriple(tag.vault.id);
     }
   };
@@ -70,6 +72,7 @@ export const Tag: React.FC<TagProps> = ({ tag, account }) => {
     const tx = await multivault.redeemTriple(BigInt(vaultId), BigInt(amount));
     console.log(tx);
     setLoading(false);
+    refetch();
   };
 
   const depositTriple = async (vaultId: string) => {
@@ -77,26 +80,28 @@ export const Tag: React.FC<TagProps> = ({ tag, account }) => {
     const tx = await multivault.depositTriple(BigInt(vaultId), parseEther('0.00042'));
     console.log(tx);
     setLoading(false);
+    refetch();
   };
 
-  const finalBgClass = myPosition && myCounterPosition ? 'bg-slate-800 border-slate-800' : myPosition ? 'bg-slate-800 border-slate-800' : myCounterPosition ? 'bg-rose-900 border-rose-900' : bgClass;
+  const finalBgClass = myPosition && myCounterPosition ? 'bg-sky-800 border-slate-800' : myPosition ? 'bg-sky-800 border-slate-800' : myCounterPosition ? 'bg-rose-900 border-rose-900' : bgClass;
 
   return (
     <div className={`flex items-center border rounded-full  ${finalBgClass} `} title={`Total Staked: ${totalStaked.toFixed(6)} ETH by ${totalPositionCount} accounts \n My Position: ${myPositionInEth.toFixed(6)} ETH`}>
       <button
         disabled={loading}
         onClick={() => handleTagClick(false)}
-        onMouseEnter={() => setBgClass('bg-slate-800 border-slate-800')}
+        onMouseEnter={() => setBgClass('bg-sky-800 border-slate-800')}
         onMouseLeave={() => setBgClass('bg-transparent border-slate-800')}
         className="flex items-center  text-slate-100  text-xs rounded-l-full space-x-3 px-2 h-7 ">
-        {tag.object.image && (
+        {loading && <Spinner />}
+        {!loading && tag.object.image && (
           <img
             src={tag.object.image}
             alt={tag.object.label || ''}
             className="w-6 h-6 rounded-full object-cover "
           />
         )}
-        <span className="text-xs text-slate-200 ml-2 ">{loading ? 'Waiting...' : tag.object.label}</span>
+        <span className="text-xs text-slate-200 ml-2 ">{tag.object.label}</span>
         <span className="text-xs text-slate-200 ">{tag.vault.positionCount}</span>
       </button>
       <button
