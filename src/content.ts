@@ -16,3 +16,4 @@ window.addEventListener("message", (event) => {
     chrome.runtime.sendMessage(event.data);
   }
 });
+

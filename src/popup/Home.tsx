@@ -7,6 +7,7 @@ import { Tag } from './Tag.js';
 import { useMultiVault } from './intuition-react/useMultiVault.js';
 import { TagSearch } from './TagSearch';
 import { Spinner } from './Spinner.js';
+import { AtomForm } from './AtomForm.js';
 
 export const Home: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
@@ -80,7 +81,7 @@ export const Home: React.FC = () => {
   const usd = data.chainlinkPrices.items[0].usd;
 
   if (!thing) {
-    return <h1 className="text-xl dark:text-slate-400 mt-4">No data found for this URL</h1>;
+    return <AtomForm />;
   }
 
   const myPosition = thing.atom.vault.myPosition?.items[0]?.shares;
@@ -192,3 +193,10 @@ export const Home: React.FC = () => {
     </div>
   );
 };
+
+
+function getCanonicalUrl() {
+  const canonical = document.querySelector('meta[property="og:url"]')?.getAttribute('content');
+  const url = document.location.href;
+  return { canonical, url };
+}
