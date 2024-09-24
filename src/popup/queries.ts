@@ -72,6 +72,12 @@ query GetThings($url: String, $address: String) {
                   accountId
                 }
               }
+              positions{
+                items {
+                  shares
+                  accountId
+                }
+              }
             }
             vault {
               id
@@ -79,6 +85,12 @@ query GetThings($url: String, $address: String) {
               totalShares
               currentSharePrice
               myPosition: positions(limit: 1, where: { accountId: $address }) {
+                items {
+                  shares
+                  accountId
+                }
+              }
+              positions{
                 items {
                   shares
                   accountId

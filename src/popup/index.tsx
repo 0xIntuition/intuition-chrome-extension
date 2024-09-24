@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import { App } from './App.js';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { GraphDataProvider } from './GraphDataContext';
 
 const client = new ApolloClient({
   uri: 'https://i7n.app/graphql',
@@ -8,6 +9,10 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <ApolloProvider client={client}><App /></ApolloProvider>,
+  <ApolloProvider client={client}>
+    <GraphDataProvider>
+      <App />
+    </GraphDataProvider>
+  </ApolloProvider>,
   document.getElementById('root')
 );

@@ -8,6 +8,8 @@ import { useMultiVault } from './intuition-react/useMultiVault.js';
 import { TagSearch } from './TagSearch';
 import { Spinner } from './Spinner.js';
 import { AtomForm } from './AtomForm.js';
+import { useGraphData, defaultSettings } from './GraphDataContext';
+
 
 export const Home: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState<string | undefined>(undefined);
@@ -15,6 +17,7 @@ export const Home: React.FC = () => {
   const { multivault, client } = useMultiVault(account);
   const [showTagSearch, setShowTagSearch] = useState(false);
   const [selectedTag, setSelectedTag] = useState<any>(null);
+const { setGraphData } = useGraphData();
 
 
   useEffect(() => {
@@ -39,6 +42,88 @@ export const Home: React.FC = () => {
     },
     skip: !currentUrl,
   });
+
+  useEffect(() => {
+    if (data) {
+      let nodes: any[] = [];
+        let edges: any[] = [];
+
+        // Process things
+        data.things?.items.forEach(thing => {
+          nodes.push({ id: thing.atomId.toString()});
+
+          // Process atom
+          const atom = thing.atom;
+          // Process vault
+          const vault = atom.vault;
+          // Process positions
+          vault.positions?.items.forEach(position => {
+            nodes.push({ id: position.account.id.toString()});
+            edges.push({ id: `${thing.atomId}-${position.account.id}`, from: thing.atomId.toString(), to: position.account.id.toString()});
+          });
+
+          // Process asSubject triples
+          atom.asSubject?.items.forEach(triple => {
+            nodes.push({ id: triple.id.toString() });
+            edges.push({ id: `${thing.atomId}-${triple.id}`, from: thing.atomId.toString(), to: triple.id.toString() });
+
+            // Object
+            nodes.push({ id: triple.object.id.toString() });
+            edges.push({ id: `${triple.id}-${triple.object.id}`, from: triple.id.toString(), to: triple.object.id.toString() });
+
+            // Predicate
+            nodes.push({ id: triple.predicate.id.toString() });
+            edges.push({ id: `${triple.object.id}-${triple.predicate.id}`, from: triple.object.id.toString(), to: triple.predicate.id.toString() });
+            
+            // Subject
+            edges.push({ id: `${triple.predicate.id}-${thing.atomId}`, from: triple.predicate.id.toString(), to: thing.atomId.toString() });
+
+            // Process counterVault
+            const counterVault = triple.counterVault;
+            counterVault.positions?.items.forEach(position => {
+              nodes.push({ id: position.accountId.toString() });
+              edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
+            });
+
+            // Process triple vault
+            const tripleVault = triple.vault;
+            tripleVault.positions?.items.forEach(position => {
+              nodes.push({ id: position.accountId.toString() });
+              edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
+            });
+
+          });
+        });
+
+        // Make sure all nodes have a unique id
+        const uniqueNodes = nodes.filter((node, index, self) =>
+          index === self.findIndex((t) => (
+            t.id === node.id
+          ))
+        );
+
+        // Make sure all edges have a unique id
+        let uniqueEdges = edges.filter((edge, index, self) =>
+          index === self.findIndex((t) => (
+            t.id === edge.id
+          ))
+        );
+
+        // Make sure all edge.from and edge.to are in the nodes array
+        uniqueEdges.forEach(edge => {
+          if (!uniqueNodes.some(node => node.id === edge.from)) {
+            console.error(`Edge ${edge.id} has a from value that is not in the nodes array: ${edge.from}`);
+          }
+          if (!uniqueNodes.some(node => node.id === edge.to)) {
+            console.error(`Edge ${edge.id} has a to value that is not in the nodes array: ${edge.to}`);
+          } 
+        });
+
+        // Remove edges where from and to are the same
+        uniqueEdges = uniqueEdges.filter(edge => edge.from !== edge.to);
+      setGraphData({nodes: uniqueNodes, edges: uniqueEdges, settings: defaultSettings});
+    }
+  }, [data]);
 
   const openAtom = (id: number) => {
     chrome.tabs.create({ url: `https://i7n.app/a/${id}` });

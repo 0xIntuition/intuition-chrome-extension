@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate, useLocation } from 'react-router-dom';
 import { Home } from './Home.js';
 import { Me } from './Me.js';
 import { Graph } from './Graph.js';
 import { Settings } from './Settings.js';
+import { Chat } from './Chat.js';
+import { show_graph } from 'wasm-graph-view';
+import { defaultSettings, useGraphData } from './GraphDataContext.js';
 const NavLink: React.FC<{ to: string, children: React.ReactNode }> = ({ to, children }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
-  
+
+
   return (
     <Link
       to={to}
-      className={`px-4 py-2 rounded-md ${
-        isActive ? 'bg-slate-700 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+      className={`px-4 py-2 rounded-md border border-1 ${
+        isActive ? 'border-slate-700 text-white' : 'text-slate-300 border-slate-950 hover:border-slate-700 hover:text-white'
       }`}
     >
       {children}
@@ -44,18 +48,20 @@ const SettingsIcon: React.FC = () => (
 );
 
 export const App: React.FC = () => {
+
   return (
     <Router>
-      <div className="bg-slate-950 min-h-screen">
-        <nav className="bg-slate-800 p-1">
+      <div className="bg-slate-950 min-h-screen relative pt-40"> {/* Added pt-14 for top padding */}
+        <nav className="p-1 fixed top-0 left-0 w-full z-10 bg-slate-950"> {/* Changed to fixed and added z-10 */}
           <div className="flex justify-between items-center">
             <div className="flex flex-row ">
               <NavLink to="/">
                 <HomeIcon />
               </NavLink>
-              <NavLink to="/graph">
+              <NavLink to="/chat">
                 <GraphIcon />
               </NavLink>
+
             </div>
             <div className="flex flex-row ">
             <NavLink to="/settings">
@@ -66,14 +72,17 @@ export const App: React.FC = () => {
             </NavLink>
             </div>
           </div>
+          <canvas id="viz" className="focus:outline-none h-32 w-full"></canvas>
         </nav>
-        <Routes>
+        <div className="mt-4">
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/me" element={<Me />} />
-          <Route path="/graph" element={<Graph />} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </div>
       </div>
     </Router>
   );
