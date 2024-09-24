@@ -15,8 +15,8 @@ const NavLink: React.FC<{ to: string, children: React.ReactNode }> = ({ to, chil
   return (
     <Link
       to={to}
-      className={`px-4 py-2 rounded-md border border-1 ${
-        isActive ? 'border-slate-700 text-white' : 'text-slate-300 border-slate-950 hover:border-slate-700 hover:text-white'
+      className={`px-4 py-2 rounded-md  ${
+        isActive ? ' text-white' : 'text-slate-700  hover:text-white'
       }`}
     >
       {children}

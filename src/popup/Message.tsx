@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 
 interface MessageProps {
@@ -7,7 +7,14 @@ interface MessageProps {
 }
 
 export const Message: React.FC<MessageProps> = ({ role, content }) => {
-  if (role === 'system') {
+  const [showSystemPrompt, setShowSystemPrompt] = useState(false);
+    useEffect(() => {
+    const bool = localStorage.getItem('showSystemPrompt');
+    if (bool) {
+      setShowSystemPrompt(bool === 'true');
+    }
+  }, []);
+  if (role === 'system' && !showSystemPrompt) {
     return null;
   }
 
