@@ -164,7 +164,10 @@ query GetThingsExtended($url: String) {
               positions{
                 items {
                   shares
-                  accountId
+                  account {
+                    id
+                    label
+                  }
                 }
               }
             }
@@ -176,7 +179,10 @@ query GetThingsExtended($url: String) {
               positions{
                 items {
                   shares
-                  accountId
+                  account {
+                    id
+                    label
+                  }
                 }
               }
             }

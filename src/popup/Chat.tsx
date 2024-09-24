@@ -92,15 +92,15 @@ export const Chat: React.FC = () => {
             // Process counterVault
             const counterVault = triple.counterVault;
             counterVault.positions?.items.forEach(position => {
-              nodes.push({ id: position.accountId.toString() });
-              edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
+              nodes.push({ id: position.account.id.toString() });
+              edges.push({ id: `${triple.id}-${position.account.id}`, from: triple.id.toString(), to: position.account.id.toString() });
             });
 
             // Process triple vault
             const tripleVault = triple.vault;
             tripleVault.positions?.items.forEach(position => {
-              nodes.push({ id: position.accountId.toString() });
-              edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
+              nodes.push({ id: position.account.id.toString() });
+              edges.push({ id: `${triple.id}-${position.account.id}`, from: triple.id.toString(), to: position.account.id.toString() });
             });
 
           });
@@ -156,13 +156,13 @@ export const Chat: React.FC = () => {
           systemMessage += `  - For (${triple.vault.positionCount}): \n`;
             triple.vault.positions?.items.forEach(position => {
               const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.vault.currentSharePrice))) * usd;
-              systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Account: ${position.accountId} \n`;
+              systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account.label} Account: ${position.account.id} \n`;
             });
             // counterVault
           systemMessage += `  - Against (${triple.counterVault.positionCount}): \n`;
             triple.counterVault.positions?.items.forEach(position => {
               const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.counterVault.currentSharePrice))) * usd;
-              systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Account: ${position.accountId} \n`;
+              systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account.label} Account: ${position.account.id} \n`;
             });
           });
           systemMessage += `\n\n\n`;
