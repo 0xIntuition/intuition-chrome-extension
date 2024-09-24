@@ -14,7 +14,7 @@ export interface GraphData {
 
 export const defaultSettings: GraphData['settings'] = {
   resolution: [342, 128],
-  initial_camera_location: [0.0, 0.0, 10.0],
+  initial_camera_location: [0.0, -7.0, 3.0],
   clear_color: [2.0 / 255.0, 6.0 / 255.0, 23.0 / 255.0]
 };
 
