@@ -267,3 +267,13 @@ query SearchAtoms($label: String!, $after: String) {
   }
 }
 `);
+
+export const getAccountProfileQuery = gql(/* GraphQL */ `
+query GetAccountProfile($address: String!) {
+  account(id: $address) {
+    image
+    label
+    id
+  }
+}
+`);

@@ -2,21 +2,22 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate, useLocation } from 'react-router-dom';
 import { Home } from './Home.js';
 import { Me } from './Me.js';
-import { Graph } from './Graph.js';
 import { Settings } from './Settings.js';
 import { Chat } from './Chat.js';
-import { show_graph } from 'wasm-graph-view';
 import { defaultSettings, useGraphData } from './GraphDataContext.js';
+import { useQuery } from '@apollo/client';
+import { getAccountProfileQuery } from './queries.js';
+import { Address } from 'viem';
+import { AccountImage } from '../AccountImage.js';
+import { blo } from 'blo';
 const NavLink: React.FC<{ to: string, children: React.ReactNode }> = ({ to, children }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
-
-
   return (
     <Link
       to={to}
       className={`px-4 py-2 rounded-md  ${
-        isActive ? ' text-white' : 'text-slate-700  hover:text-white'
+        isActive ? ' text-white opacity-100' : 'hover:text-white opacity-40 text-white hover:opacity-100'
       }`}
     >
       {children}
@@ -48,8 +49,18 @@ const SettingsIcon: React.FC = () => (
 );
 
 export const App: React.FC = () => {
-
+  const [account, setAccount] = useState<Address | undefined>(undefined);
   const { graphData } = useGraphData();
+  useEffect(() => {
+    const cachedAccount = localStorage.getItem('account');
+    if (cachedAccount) {
+      setAccount(cachedAccount as Address);
+    }
+  }, []);
+  const { data, loading } = useQuery(getAccountProfileQuery, {
+    variables: { address: account as Address },
+    skip: !account,
+  });
   return (
     <Router>
       <div className="bg-slate-950 min-h-screen relative pt-40"> {/* Added pt-14 for top padding */}
@@ -70,7 +81,13 @@ export const App: React.FC = () => {
               <SettingsIcon />
             </NavLink>
             <NavLink to="/me">
-              <MeIcon />
+                {data && data.account && ( <img
+                  src={data.account.image || blo(data.account.id as `0x${string}`)}
+                  width={24}
+                  height={24}
+                  className="rounded-full object-cover object-center"
+                />)}
+                {!data?.account && <MeIcon />}
             </NavLink>
             </div>
           </div>
