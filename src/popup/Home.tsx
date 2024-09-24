@@ -165,7 +165,7 @@ const { setGraphData } = useGraphData();
   const thing = data.things.items[0];
   const usd = data.chainlinkPrices.items[0].usd;
 
-  if (!thing) {
+  if (!data?.things) {
     return <AtomForm />;
   }
 

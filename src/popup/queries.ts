@@ -143,6 +143,7 @@ query GetThingsExtended($url: String) {
         asSubject {
           items {
             id
+            label
             object {
               id
               label
@@ -182,6 +183,11 @@ query GetThingsExtended($url: String) {
           }
         }
       }
+    }
+  }
+ chainlinkPrices(limit: 1, orderBy: "id", orderDirection: "desc") {
+    items {
+      usd
     }
   }
 }

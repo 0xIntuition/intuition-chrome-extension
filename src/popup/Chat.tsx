@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Message } from './Message.js';
 import OpenAI from 'openai';
 import { Spinner } from './Spinner.js';
-import { Address } from 'viem';
+import { Address, formatEther } from 'viem';
 import { useQuery } from '@apollo/client';
 import { getThingsExtendedQuery } from './queries.js';
 import { useGraphData, defaultSettings } from './GraphDataContext.js';
@@ -139,11 +139,42 @@ export const Chat: React.FC = () => {
     }
   }, [data]);
   useEffect(() => {
+    if (data) {
+        const usd = data.chainlinkPrices.items[0].usd;
+        let systemMessage = 'You are a helpful assistant. Here is the data from the intuition knowledge graph:';
+        systemMessage += `\n\n\n`;
+        data.things?.items.forEach(thing => {
+          systemMessage += `\# ${thing.name}`;
+          systemMessage += `\n\n${thing.atom.value?.thing?.description}`;
+          systemMessage += `\n\nID: did:i7n:84532:${thing.atomId}`;
+
+
+          systemMessage += `\n\n\n#### Claims: \n`;
+          thing.atom.asSubject?.items.forEach(triple => {
+            systemMessage += ` - ${triple.label} \n`;
+            //positions
+          systemMessage += `  - For (${triple.vault.positionCount}): \n`;
+            triple.vault.positions?.items.forEach(position => {
+              const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.vault.currentSharePrice))) * usd;
+              systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Account: ${position.accountId} \n`;
+            });
+            // counterVault
+          systemMessage += `  - Against (${triple.counterVault.positionCount}): \n`;
+            triple.counterVault.positions?.items.forEach(position => {
+              const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.counterVault.currentSharePrice))) * usd;
+              systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Account: ${position.accountId} \n`;
+            });
+          });
+          systemMessage += `\n\n\n`;
+        });
+
+
         setMessages([
-          { role: 'system', content: 'You are a helpful assistant that summarizes graph data.' },
-          { role: 'assistant', content: 'Hello! How can I help you today nana?' }
+          { role: 'system', content: systemMessage },
+          { role: 'assistant', content: 'Hello! How can I help you today?' }
         ])
-  }, []);
+    }
+  }, [data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
