@@ -161,25 +161,9 @@ const { setGraphData } = useGraphData();
   if (!data) {
     return <div>Loading...</div>;
   }
-
-  const thing = data.things.items[0];
-  const usd = data.chainlinkPrices.items[0].usd;
-
-  if (!data?.things) {
-    return <AtomForm />;
-  }
-
-  const myPosition = thing.atom.vault.myPosition?.items[0]?.shares;
-  const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
-  const totalStaked = parseFloat(formatEther(BigInt(thing.atom.vault.totalShares)))
-    * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
-
-  const tags = thing.atom.asSubject?.items.filter((item) => item.predicate.id === '4') || [];
-  const numberOfRemainingPositions = thing.atom.vault.positionCount <= 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
-
-  const handleAtomClick = (atomId: number) => {
+  const handleAtomClick = (atomId: number, myPosition: number) => {
     if (myPosition) {
-      redeem(atomId);
+      redeem(atomId, myPosition);
     } else {
       deposit(atomId);
     }
@@ -212,7 +196,7 @@ const { setGraphData } = useGraphData();
     }
   };
 
-  const redeem = async (atomId: number) => {
+  const redeem = async (atomId: number, myPosition: number) => {
     try {
       const { hash } = await multivault.redeemAtom(BigInt(atomId), BigInt(myPosition));
       console.log(`Transaction hash: ${hash}`);
@@ -223,6 +207,24 @@ const { setGraphData } = useGraphData();
       console.log('Error during redeem:', error.message);
     }
   };
+
+  if (!data?.things || data.things.items.length === 0) {
+    return <AtomForm />;
+  }
+  const thing = data.things.items[0];
+  const usd = data.chainlinkPrices.items[0].usd;
+
+  return data.things.items.map((thing) => { 
+
+  const myPosition = thing.atom.vault.myPosition?.items[0]?.shares;
+  const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
+  const totalStaked = parseFloat(formatEther(BigInt(thing.atom.vault.totalShares)))
+    * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
+
+  const tags = thing.atom.asSubject?.items.filter((item) => item.predicate.id === '4') || [];
+  const numberOfRemainingPositions = thing.atom.vault.positionCount <= 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
+
+  
 
   return (
     <div className="bg-slate-950 p-2">
@@ -242,7 +244,7 @@ const { setGraphData } = useGraphData();
         <div className="flex flex-row mt-3 space-x-1">
           <button
             title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom.vault.positionCount - 1} accounts \n My position: ${myPositionInEth.toFixed(6)} ETH (${(myPositionInEth * usd).toFixed(2)} USD)`}
-            onClick={() => handleAtomClick(thing.atomId)}
+            onClick={() => handleAtomClick(thing.atomId, myPosition)}
             className={`space-x-1 flex flex-row items-center border border-sky-800 hover:bg-sky-700 text-green-100 text-xs p-1 px-2 rounded-full ${myPosition ? 'bg-sky-800' : 'bg-transparent'}`}>
             <span className="text-sm">✓</span>
             <div className="flex flex-row mr-3">
@@ -277,11 +279,5 @@ const { setGraphData } = useGraphData();
       </div>
     </div>
   );
+})
 };
-
-
-function getCanonicalUrl() {
-  const canonical = document.querySelector('meta[property="og:url"]')?.getAttribute('content');
-  const url = document.location.href;
-  return { canonical, url };
-}

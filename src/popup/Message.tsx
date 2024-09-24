@@ -20,7 +20,7 @@ export const Message: React.FC<MessageProps> = ({ role, content }) => {
 
   return (
     <div className={`mb-4 ${role === 'user' ? 'text-right' : 'text-left'}`}>
-      <div className={`inline-block p-2 rounded-lg ${role === 'user' ? 'bg-sky-900' : 'bg-slate-900'}`}>
+      <div className={`inline-block p-2 pb-0 rounded-lg ${role === 'user' ? 'bg-sky-900' : 'bg-slate-900'}`}>
         <Markdown
         components={{
           img: ({node, ...props}) => <img {...props} style={{maxHeight: '1em'}} />,

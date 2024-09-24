@@ -49,6 +49,7 @@ const SettingsIcon: React.FC = () => (
 
 export const App: React.FC = () => {
 
+  const { graphData } = useGraphData();
   return (
     <Router>
       <div className="bg-slate-950 min-h-screen relative pt-40"> {/* Added pt-14 for top padding */}
@@ -58,10 +59,11 @@ export const App: React.FC = () => {
               <NavLink to="/">
                 <HomeIcon />
               </NavLink>
-              <NavLink to="/chat">
-                <GraphIcon />
-              </NavLink>
-
+              {graphData && (
+                <NavLink to="/chat">
+                  <GraphIcon />
+                </NavLink>
+              )}
             </div>
             <div className="flex flex-row ">
             <NavLink to="/settings">

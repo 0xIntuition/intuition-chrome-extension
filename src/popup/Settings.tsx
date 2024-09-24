@@ -56,7 +56,7 @@ const [showSystemPrompt, setShowSystemPrompt] = useState(false);
           type="checkbox"
           checked={showSystemPrompt}
           onChange={(e) => setShowSystemPrompt(e.target.checked)}
-          className="w-full p-2 bg-slate-800 text-slate-200 rounded"
+          className="p-2 bg-slate-800 text-slate-200 rounded"
         />
       </div>
       
