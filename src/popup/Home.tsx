@@ -159,7 +159,7 @@ const { setGraphData } = useGraphData();
   }
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center p-2"><Spinner /></div>;
   }
   const handleAtomClick = (atomId: number, myPosition: number) => {
     if (myPosition) {

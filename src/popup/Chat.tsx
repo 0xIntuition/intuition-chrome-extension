@@ -212,8 +212,8 @@ export const Chat: React.FC = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {isLoading && <Spinner />}
-      {!isLoading && <form onSubmit={handleSubmit} className="p-2 ">
+      {(isLoading || loading) && <div className="flex justify-center items-center p-2"><Spinner /></div>}
+      {!isLoading && !loading && <form onSubmit={handleSubmit} className="p-2 ">
         <input
           type="text"
           value={input}
