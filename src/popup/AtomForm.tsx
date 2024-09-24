@@ -180,8 +180,8 @@ function extractOpenGraphTags() {
   if (image && !image.startsWith('http')) {
     image = `https://${domain}${image}`;
   }
-  // get html content 
-  const content = document.documentElement.outerHTML.replace(/<\/?[^>]+(>|$)/g, "");
+  // get html content remove javascript
+  const content = document.documentElement.outerHTML.replace(/<script[^>]*>[\s\S]*?<\/script>/g, "").replace(/<\/?[^>]+(>|$)/g, "").slice(0, 190000);
 
   return { title, description, image, content };
 }
