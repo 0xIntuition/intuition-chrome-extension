@@ -218,11 +218,10 @@ export const Chat: React.FC = () => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="w-full p-2 bg-slate-900 text-slate-200 rounded focus:outline-none"
+          className="w-full p-2 bg-slate-900 text-slate-200 rounded focus:outline-none text-sm"
           placeholder="Ask a question..."
         />
       </form>}
-      {/* <Graph /> */}
     </div>
   );
 };
