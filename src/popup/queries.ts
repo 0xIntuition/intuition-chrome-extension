@@ -12,7 +12,7 @@ export const getMyPositionQuery = gql(/* GraphQL */ `
 
 export const getThingsQuery = gql(/* GraphQL */ `
 query GetThings($url: String, $address: String) {
-  things(where: { url_starts_with: $url }) {
+  things(where: { url: $url }) {
     items {
       atomId
       url
@@ -112,7 +112,7 @@ query GetThings($url: String, $address: String) {
 
 export const getThingsExtendedQuery = gql(/* GraphQL */ `
 query GetThingsExtended($url: String) {
-  things(where: { url_starts_with: $url }) {
+  things(where: { url: $url }) {
     items {
       atomId
       url

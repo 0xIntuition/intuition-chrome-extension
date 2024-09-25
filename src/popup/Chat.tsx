@@ -34,8 +34,7 @@ export const Chat: React.FC = () => {
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0]!.url;
-      const cleanUrl = url?.endsWith('/') ? url?.slice(0, -1) : url;
-      setCurrentUrl(cleanUrl);
+      setCurrentUrl(url);
     });
   }, []);
 

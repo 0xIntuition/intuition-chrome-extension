@@ -17,14 +17,12 @@ export const Home: React.FC = () => {
   const { multivault, client } = useMultiVault(account);
   const [showTagSearch, setShowTagSearch] = useState(false);
   const [selectedTag, setSelectedTag] = useState<any>(null);
-const { setGraphData } = useGraphData();
-
+  const { setGraphData } = useGraphData();
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0]!.url;
-      const cleanUrl = url?.endsWith('/') ? url?.slice(0, -1) : url;
-      setCurrentUrl(cleanUrl);
+      setCurrentUrl(url);
     });
   }, []);
 
