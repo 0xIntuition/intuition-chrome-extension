@@ -9,6 +9,8 @@ export const AtomForm = () => {
   const [openai, setOpenai] = useState<OpenAI | null>(null);
   const [pinata, setPinata] = useState<PinataSDK | null>(null);
   const [account, setAccount] = useState<Address | undefined>(undefined);
+  const [progressMessage, setProgressMessage] = useState<string | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const { multivault, client } = useMultiVault(account);
   const [creatingAtom, setCreatingAtom] = useState(false);
   useEffect(() => {
@@ -86,6 +88,7 @@ export const AtomForm = () => {
 
   async function handleCreateAtom(): Promise<void> {
     setCreatingAtom(true);
+    setProgressMessage('Uploading to IPFS...');
     const json = {
       '@context': 'https://schema.org',
       '@type': 'Thing',
@@ -102,6 +105,7 @@ export const AtomForm = () => {
     }
 
     try {
+      setProgressMessage('Creating atom...');
       let account: `0x${string}` | undefined = localStorage.getItem('account') as `0x${string}` | undefined;
       if (!account) {
         const accounts = await client?.requestAddresses();
@@ -117,11 +121,14 @@ export const AtomForm = () => {
         uri: 'ipfs://'+result.IpfsHash,
         initialDeposit: parseEther('0.00042'),
       });
+      setProgressMessage(undefined);
       console.log(`Transaction hash: ${hash}`);
 
 
     } catch (error: any) {
       console.log('Error during deposit:', error.message);
+      setErrorMessage(error.message);
+      setProgressMessage(undefined);
     }
     setCreatingAtom(false);
   }
@@ -161,8 +168,10 @@ export const AtomForm = () => {
             className={`space-x-1 flex flex-row items-center border border-sky-800 hover:bg-sky-700 text-green-100 text-xs p-1 px-2 rounded-full`}>
             
             {creatingAtom ? <Spinner /> : <span className="text-sm">✓</span>}
+            {progressMessage && <span className="text-sm ml-2">{progressMessage}</span>}
             
           </button>
+          {errorMessage && <span className="text-sm ml-2 text-red-500">{errorMessage}</span>}
         </div>
 
       </div>
