@@ -1,14 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, Navigate, useLocation } from 'react-router-dom';
 import { Home } from './Home.js';
 import { Me } from './Me.js';
 import { Settings } from './Settings.js';
 import { Chat } from './Chat.js';
-import { defaultSettings, useGraphData } from './GraphDataContext.js';
+import { useGraphData } from './GraphDataContext.js';
 import { useQuery } from '@apollo/client';
 import { getAccountProfileQuery } from './queries.js';
 import { Address } from 'viem';
-import { AccountImage } from '../AccountImage.js';
 import { blo } from 'blo';
 const NavLink: React.FC<{ to: string, children: React.ReactNode }> = ({ to, children }) => {
   const location = useLocation();
