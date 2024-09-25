@@ -43,6 +43,12 @@ const MeIcon: React.FC = () => (
 export const App: React.FC = () => {
   const [account, setAccount] = useState<Address | undefined>(undefined);
   const { graphData } = useGraphData();
+    useEffect(() => {
+    const pinataApiKey = localStorage.getItem('pinataApiKey');
+    if (!pinataApiKey) {
+      localStorage.setItem('pinataApiKey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4NmJhNGFkNy1kMTg0LTQ3MGItYjIzOS1kZDk4ODAwMTk3NTgiLCJlbWFpbCI6ImJpbGx5QGludHVpdGlvbi5zeXN0ZW1zIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiRlJBMSJ9LHsiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiTllDMSJ9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjI4NGRkZTViNjM5ZDdkOWU5MmI2Iiwic2NvcGVkS2V5U2VjcmV0IjoiNGYwOTM0YjM4NjAwOWI4MjgwMGNkMDE4YzZhMWQ1ZjA0MmFmY2Y5OWUyNDVhY2U2ODM1YjFjOWE2OWQzYWJmMyIsImV4cCI6MTc1ODYyNDQyNH0.9n7-XOh6Q2IycJP7uweZCtsL4eqLHimsyBqf73Y8QgU');
+    }
+  }, []);
   useEffect(() => {
     const cachedAccount = localStorage.getItem('account');
     if (cachedAccount) {
