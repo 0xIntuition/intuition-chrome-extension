@@ -4,6 +4,7 @@ import { Address } from 'viem';
 import { getMyPositionsQuery } from './queries';
 import { useQuery } from '@apollo/client';
 import { Tag } from './Tag';
+import { Settings } from './Settings';
 
 export const Me: React.FC = () => {
   const [account, setAccount] = useState<Address | undefined>(undefined);
@@ -138,6 +139,7 @@ export const Me: React.FC = () => {
           </div>
         ))}
       </div>
+      <Settings />
     </div>
   );
 };

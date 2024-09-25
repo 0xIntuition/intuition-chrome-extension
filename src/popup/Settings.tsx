@@ -27,7 +27,7 @@ const [showSystemPrompt, setShowSystemPrompt] = useState(false);
   };
 
   return (
-    <div className="p-4 bg-slate-900 text-slate-200 min-h-screen">
+    <div className="mt-6">
       <h1 className="text-xl mb-4">Settings</h1>
       
       <div className="mb-4">
