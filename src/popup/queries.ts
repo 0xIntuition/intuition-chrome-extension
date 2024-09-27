@@ -277,3 +277,55 @@ query GetAccountProfile($address: String!) {
   }
 }
 `);
+
+
+export const getAccountInfoQuery = gql(/* GraphQL */ `
+query GetAccountInfo($address: String!) {
+  account(id: $address) {
+    image
+    label
+    id
+    positions(where: { accountId: $address }) {
+      items {
+        id
+        shares
+        vault {
+          id
+          positionCount
+          totalShares
+          currentSharePrice
+          atom {
+            id
+            label
+            image
+          }
+          triple {
+            id
+            label
+            subject {
+              id
+              image
+              label
+            }
+            predicate {
+              id
+              image
+              label
+            }
+            object {
+              id
+              image
+              label
+            }
+          }
+        }
+      }
+    }
+  }
+  chainlinkPrices(limit: 1, orderBy: "id", orderDirection: "desc") {
+    items {
+      usd
+    }
+  }
+}
+`);

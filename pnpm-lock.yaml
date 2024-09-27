@@ -28,7 +28,7 @@ importers:
         version: 16.9.0
       openai:
         specifier: ^4.63.0
-        version: 4.63.0
+        version: 4.63.0(zod@3.23.8)
       pinata-web3:
         specifier: ^0.4.1
         version: 0.4.1
@@ -46,10 +46,13 @@ importers:
         version: 6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       viem:
         specifier: ^2.21.8
-        version: 2.21.8
+        version: 2.21.8(zod@3.23.8)
       wasm-graph-view:
         specifier: link:../graphviz-poc/packages/wasm-graph-view/pkg
         version: link:../graphviz-poc/packages/wasm-graph-view/pkg
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@types/chrome':
         specifier: ^0.0.271
@@ -2987,6 +2990,9 @@ packages:
   zen-observable@0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
 
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -4130,7 +4136,9 @@ snapshots:
     dependencies:
       tslib: 2.7.0
 
-  abitype@1.0.5: {}
+  abitype@1.0.5(zod@3.23.8):
+    optionalDependencies:
+      zod: 3.23.8
 
   abort-controller@3.0.0:
     dependencies:
@@ -5627,7 +5635,7 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
-  openai@4.63.0:
+  openai@4.63.0(zod@3.23.8):
     dependencies:
       '@types/node': 18.19.50
       '@types/node-fetch': 2.6.11
@@ -5636,6 +5644,8 @@ snapshots:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
+    optionalDependencies:
+      zod: 3.23.8
     transitivePeerDependencies:
       - encoding
 
@@ -6400,14 +6410,14 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  viem@2.21.8:
+  viem@2.21.8(zod@3.23.8):
     dependencies:
       '@adraffy/ens-normalize': 1.10.0
       '@noble/curves': 1.4.0
       '@noble/hashes': 1.4.0
       '@scure/bip32': 1.4.0
       '@scure/bip39': 1.4.0
-      abitype: 1.0.5
+      abitype: 1.0.5(zod@3.23.8)
       isows: 1.0.4(ws@8.17.1)
       webauthn-p256: 0.0.5
       ws: 8.17.1
@@ -6540,5 +6550,7 @@ snapshots:
       zen-observable: 0.8.15
 
   zen-observable@0.8.15: {}
+
+  zod@3.23.8: {}
 
   zwitch@2.0.4: {}
