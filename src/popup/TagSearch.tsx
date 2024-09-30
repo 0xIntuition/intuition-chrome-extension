@@ -3,10 +3,11 @@ import { useLazyQuery } from '@apollo/client';
 import { searchAtomsQuery } from './queries';
 
 interface TagSearchProps {
-  onSelected: (selectedTag: any) => void;
+  onSelected: (selectedTag: any, atomId: number) => void;
+  atomId: number;
 }
 
-export const TagSearch: React.FC<TagSearchProps> = ({ onSelected }) => {
+export const TagSearch: React.FC<TagSearchProps> = ({ onSelected, atomId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [getSearchResults, { loading, data }] = useLazyQuery(searchAtomsQuery);
@@ -27,7 +28,7 @@ export const TagSearch: React.FC<TagSearchProps> = ({ onSelected }) => {
   };
 
   const handleSelect = (tag: any) => {
-    onSelected(tag);
+    onSelected(tag, atomId);
     setSearchTerm('');
     setSearchResults([]);
   };
