@@ -1,243 +1,221 @@
 import { gql } from '../generated/gql.js';
 
 export const getMyPositionQuery = gql(/* GraphQL */ `
-  query GetMyPosition($id: BigInt!, $address: String) {  
-    positions(where: { accountId: $address, vaultId: $id }, limit: 1) {
-      items {
-        shares
-    }
+query GetMyPosition($id: numeric!, $address: String) {
+  positions(
+    where: { accountId: { _eq: $address }, vaultId: { _eq: $id } }
+    limit: 1
+  ) {
+    shares
   }
 }
 `);
 
 export const getThingsQuery = gql(/* GraphQL */ `
 query GetThings($url: String, $address: String) {
-  things(where: { url: $url }) {
-    items {
-      atomId
-      url
-      name
-      image
-      atom {
-        value {
-          thing {
-            description
+  things(where: { url: { _eq: $url } }) {
+    atomId
+    url
+    name
+    image
+    atom {
+      value {
+        thing {
+          description
+        }
+      }
+      vault {
+        positionCount
+        totalShares
+        currentSharePrice
+        myPosition: positions(
+          limit: 1
+          where: { accountId: { _eq: $address } }
+        ) {
+          shares
+          accountId
+        }
+        positions(order_by: { shares: desc }, limit: 5) {
+          shares
+          account {
+            id
+            type
+            image
+            label
           }
         }
-        vault {
+      }
+      asSubject {
+        id
+        object {
+          id
+          label
+          emoji
+          image
+        }
+        predicate {
+          emoji
+          label
+          image
+          id
+        }
+        counterVault {
+          id
           positionCount
           totalShares
           currentSharePrice
-          myPosition: positions(limit: 1, where: { accountId: $address }) {
-            items {
-              shares
-							accountId
-            }
+          myPosition: positions(
+            limit: 1
+            where: { accountId: { _eq: $address } }
+          ) {
+            shares
+            accountId
           }
-          positions(orderBy: "shares", orderDirection: "desc", limit: 5) {
-            items {
-              shares
-              account {
-                id
-                type
-                image
-                label
-              }
-            }
+          positions {
+            shares
+            accountId
           }
         }
-        asSubject {
-          items {
-            id
-            object {
-              id
-              label
-              emoji
-              image
-            }
-            predicate {
-              emoji
-              label
-              image
-              id
-            }
-            counterVault {
-              id
-              positionCount
-              totalShares
-              currentSharePrice
-              myPosition: positions(limit: 1, where: { accountId: $address }) {
-                items {
-                  shares
-                  accountId
-                }
-              }
-              positions{
-                items {
-                  shares
-                  accountId
-                }
-              }
-            }
-            vault {
-              id
-              positionCount
-              totalShares
-              currentSharePrice
-              myPosition: positions(limit: 1, where: { accountId: $address }) {
-                items {
-                  shares
-                  accountId
-                }
-              }
-              positions{
-                items {
-                  shares
-                  accountId
-                }
-              }
-            }
+        vault {
+          id
+          positionCount
+          totalShares
+          currentSharePrice
+          myPosition: positions(
+            limit: 1
+            where: { accountId: { _eq: $address } }
+          ) {
+            shares
+            accountId
+          }
+          positions {
+            shares
+            accountId
           }
         }
       }
     }
   }
-  chainlinkPrices(limit: 1, orderBy: "id", orderDirection: "desc") {
-    items {
-      usd
-    }
+  chainLinkPrices(limit: 1, order_by: { id: desc }) {
+    usd
   }
 }
 `);
 
 export const getThingsExtendedQuery = gql(/* GraphQL */ `
 query GetThingsExtended($url: String) {
-  things(where: { url: $url }) {
-    items {
-      atomId
-      url
-      name
-      image
-      atom {
-        value {
-          thing {
-            description
+  things(where: { url: { _eq: $url } }) {
+    atomId
+    url
+    name
+    image
+    atom {
+      value {
+        thing {
+          description
+        }
+      }
+      vault {
+        positionCount
+        totalShares
+        currentSharePrice
+        positions {
+          shares
+          account {
+            id
+            type
+            image
+            label
           }
         }
-        vault {
+      }
+      asSubject {
+        id
+        label
+        object {
+          id
+          label
+          emoji
+          image
+        }
+        predicate {
+          emoji
+          label
+          image
+          id
+        }
+        counterVault {
+          id
           positionCount
           totalShares
           currentSharePrice
           positions {
-            items {
-              shares
-              account {
-                id
-                type
-                image
-                label
-              }
+            shares
+            account {
+              id
+              label
             }
           }
         }
-        asSubject {
-          items {
-            id
-            label
-            object {
+        vault {
+          id
+          positionCount
+          totalShares
+          currentSharePrice
+          positions {
+            shares
+            account {
               id
               label
-              emoji
-              image
-            }
-            predicate {
-              emoji
-              label
-              image
-              id
-            }
-            counterVault {
-              id
-              positionCount
-              totalShares
-              currentSharePrice
-              positions{
-                items {
-                  shares
-                  account {
-                    id
-                    label
-                  }
-                }
-              }
-            }
-            vault {
-              id
-              positionCount
-              totalShares
-              currentSharePrice
-              positions{
-                items {
-                  shares
-                  account {
-                    id
-                    label
-                  }
-                }
-              }
             }
           }
         }
       }
     }
   }
- chainlinkPrices(limit: 1, orderBy: "id", orderDirection: "desc") {
-    items {
-      usd
-    }
+
+  chainLinkPrices(limit: 1, order_by: { id: desc }) {
+    usd
   }
 }
 `);
 
-
 export const getMyPositionsQuery = gql(/* GraphQL */ `
 query GetMyPositions($address: String) {
-  positions(where: { accountId: $address }) {
-    items {
-      id
-      shares
-      vault {
-        positionCount
-        totalShares
-        currentSharePrice
-        atom {
+  positions(where: { accountId: { _eq: $address } }) {
+    id
+    shares
+    vault {
+      positionCount
+      totalShares
+      currentSharePrice
+      atom {
+        id
+        label
+        image
+      }
+      triple {
+        id
+        label
+        subject {
           id
-          label
           image
-        }
-        triple {
-          id
           label
-          subject {
-            id
-            image
-            label
-            value {
-              thing {
-                url
-              }
+          value {
+            thing {
+              url
             }
           }
-          predicate {
-            id
-            image
-            label
-          }
-          object {
-            id
-            image
-            label
-          }
+        }
+        predicate {
+          id
+          image
+          label
+        }
+        object {
+          id
+          image
+          label
         }
       }
     }
@@ -246,24 +224,18 @@ query GetMyPositions($address: String) {
 `);
 
 export const searchAtomsQuery = gql(/* GraphQL */ `
-query SearchAtoms($label: String!, $after: String) {
+query SearchAtoms($label: String!) {
   atoms(
-    orderBy: "blockTimestamp"
-    after: $after
-    orderDirection: "desc"
+    order_by: { blockTimestamp: desc }
     limit: 30
-    where: { type_in: [Thing, Person, Organization], label_contains: $label }
+    where: {
+      type: { _in: ["Thing", "Person", "Organization"] }
+      label: { _ilike: $label }
+    }
   ) {
-    items {
-      id
-      image
-      label
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-      startCursor
-    }
+    id
+    image
+    label
   }
 }
 `);
@@ -285,47 +257,43 @@ query GetAccountInfo($address: String!) {
     image
     label
     id
-    positions(where: { accountId: $address }) {
-      items {
+    positions(where: { accountId: { _eq: $address } }) {
+      id
+      shares
+      vault {
         id
-        shares
-        vault {
+        positionCount
+        totalShares
+        currentSharePrice
+        atom {
           id
-          positionCount
-          totalShares
-          currentSharePrice
-          atom {
+          label
+          image
+        }
+        triple {
+          id
+          label
+          subject {
             id
-            label
             image
-          }
-          triple {
-            id
             label
-            subject {
-              id
-              image
-              label
-            }
-            predicate {
-              id
-              image
-              label
-            }
-            object {
-              id
-              image
-              label
-            }
+          }
+          predicate {
+            id
+            image
+            label
+          }
+          object {
+            id
+            image
+            label
           }
         }
       }
     }
   }
-  chainlinkPrices(limit: 1, orderBy: "id", orderDirection: "desc") {
-    items {
-      usd
-    }
+  chainLinkPrices(limit: 1, order_by: { id: desc }) {
+    usd
   }
 }
 `);

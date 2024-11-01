@@ -12,10 +12,11 @@ export const Me: React.FC = () => {
 
   const { data, error, refetch, loading } = useQuery(getMyPositionsQuery, {
     variables: {
-      address: account,
+      address: account?.toLocaleLowerCase(),
     },
     skip: !account,
   });
+  console.log('data', data);
 
   useEffect(() => {
     const loadAccount = async () => {
@@ -61,13 +62,13 @@ export const Me: React.FC = () => {
       console.log(bookmarks);
       const subfolderMap = new Map();
 
-      for (const position of data.positions.items.filter(
-        (position) => position.vault.triple?.predicate.id === '4'
-          && position.vault.triple?.subject?.value?.thing?.url
+      for (const position of data.positions.filter(
+        (position) => position.vault?.triple?.predicate?.id === '4'
+          && position.vault?.triple?.subject?.value?.thing?.url
       )) {
-        console.log(position.vault.triple?.subject?.value?.thing?.url);
-        const objectLabel = position.vault.triple?.object?.label || '';
-        
+        console.log(position.vault?.triple?.subject?.value?.thing?.url);
+        const objectLabel = position.vault?.triple?.object?.label || '';
+
         let subfolder = subfolderMap.get(objectLabel);
         if (!subfolder) {
           subfolder = bookmarksBarFolder.children?.find((child) => child.title === objectLabel);
@@ -81,11 +82,11 @@ export const Me: React.FC = () => {
           subfolderMap.set(objectLabel, subfolder);
         }
 
-        const bookmarkTitle = position.vault.triple?.subject?.label || '';
-        const bookmarkUrl = position.vault.triple?.subject?.value?.thing?.url || '';
-        const existingBookmark = await chrome.bookmarks.search({title: bookmarkTitle});
+        const bookmarkTitle = position.vault?.triple?.subject?.label || '';
+        const bookmarkUrl = position.vault?.triple?.subject?.value?.thing?.url || '';
+        const existingBookmark = await chrome.bookmarks.search({ title: bookmarkTitle });
 
-        const bookmarkInSubfolder = existingBookmark.find(bookmark => 
+        const bookmarkInSubfolder = existingBookmark.find(bookmark =>
           bookmark.parentId === subfolder.id && bookmark.url === bookmarkUrl
         );
 
@@ -103,13 +104,13 @@ export const Me: React.FC = () => {
 
   return (
     <div className="p-4 bg-slate-900 text-slate-200 min-h-screen">
-      
-      
-        {!account && 
-          <div className="mb-4">
-            <button
-              onClick={handleConnect}
-              className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600"
+
+
+      {!account &&
+        <div className="mb-4">
+          <button
+            onClick={handleConnect}
+            className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600"
           >
             Connect Wallet
           </button>
@@ -119,22 +120,22 @@ export const Me: React.FC = () => {
       <div className="">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl">Bookmarks</h2>
-          {!loading && data && <button 
+          {!loading && data && <button
             onClick={importBookmarks}
             className="p-1 px-4 bg-slate-800 rounded-full hover:bg-slate-600 text-xs"
           >
             Sync
           </button>}
         </div>
-      {loading && <p className="text-slate-400 mt-4">Loading...</p>}
-        {data?.positions.items.filter(
-          (position) => position.vault.triple?.predicate.id === '4'
-            && position.vault.triple?.subject?.value?.thing?.url
+        {loading && <p className="text-slate-400 mt-4">Loading...</p>}
+        {data?.positions.filter(
+          (position) => position.vault?.triple?.predicate?.id === '4'
+            && position.vault?.triple?.subject?.value?.thing?.url
         ).map((position) => (
           <div key={position.id} className="bg-slate-800 p-2 rounded mb-2">
-            <p>{position.vault.triple?.subject?.label}</p>
+            <p>{position.vault?.triple?.subject?.label}</p>
             <span className="bg-slate-700 text-xs p-1 px-2 rounded-full mt-1">
-              {position.vault.triple?.object?.label}
+              {position.vault?.triple?.object?.label}
             </span>
           </div>
         ))}

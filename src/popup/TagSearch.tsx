@@ -14,14 +14,14 @@ export const TagSearch: React.FC<TagSearchProps> = ({ onSelected, atomId }) => {
 
   useEffect(() => {
     if (data && data.atoms) {
-      setSearchResults(data.atoms.items);
+      setSearchResults(data.atoms);
     }
   }, [data]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     if (e.target.value) {
-      getSearchResults({ variables: { label: e.target.value } });
+      getSearchResults({ variables: { label: e.target.value + '%' } });
     } else {
       setSearchResults([]);
     }

@@ -63,47 +63,47 @@ export const Chat: React.FC = () => {
 
 
       // Process things
-      data.things?.items.forEach(thing => {
+      data.things?.forEach(thing => {
         nodes.push({ id: thing.atomId.toString() });
 
         // Process atom
         const atom = thing.atom;
         // Process vault
-        const vault = atom.vault;
+        const vault = atom?.vault;
         // Process positions
-        vault.positions?.items.forEach(position => {
-          nodes.push({ id: position.account.id.toString() });
-          edges.push({ id: `${thing.atomId}-${position.account.id}`, from: thing.atomId.toString(), to: position.account.id.toString() });
+        vault?.positions?.forEach(position => {
+          nodes.push({ id: position.account?.id.toString() });
+          edges.push({ id: `${thing.atomId}-${position.account?.id}`, from: thing.atomId.toString(), to: position.account?.id.toString() });
         });
 
         // Process asSubject triples
-        atom.asSubject?.items.forEach(triple => {
+        atom?.asSubject?.forEach(triple => {
           nodes.push({ id: triple.id.toString() });
           edges.push({ id: `${thing.atomId}-${triple.id}`, from: thing.atomId.toString(), to: triple.id.toString() });
 
           // Object
-          nodes.push({ id: triple.object.id.toString() });
-          edges.push({ id: `${triple.id}-${triple.object.id}`, from: triple.id.toString(), to: triple.object.id.toString() });
+          nodes.push({ id: triple.object?.id.toString() });
+          edges.push({ id: `${triple.id}-${triple.object?.id}`, from: triple.id.toString(), to: triple.object?.id.toString() });
 
           // Predicate
-          nodes.push({ id: triple.predicate.id.toString() });
-          edges.push({ id: `${triple.object.id}-${triple.predicate.id}`, from: triple.object.id.toString(), to: triple.predicate.id.toString() });
+          nodes.push({ id: triple.predicate?.id.toString() });
+          edges.push({ id: `${triple.object?.id}-${triple.predicate?.id}`, from: triple.object?.id.toString(), to: triple.predicate?.id.toString() });
 
           // Subject
-          edges.push({ id: `${triple.predicate.id}-${thing.atomId}`, from: triple.predicate.id.toString(), to: thing.atomId.toString() });
+          edges.push({ id: `${triple.predicate?.id}-${thing.atomId}`, from: triple.predicate?.id.toString(), to: thing.atomId.toString() });
 
           // Process counterVault
           const counterVault = triple.counterVault;
-          counterVault.positions?.items.forEach(position => {
-            nodes.push({ id: position.account.id.toString() });
-            edges.push({ id: `${triple.id}-${position.account.id}`, from: triple.id.toString(), to: position.account.id.toString() });
+          counterVault?.positions?.forEach(position => {
+            nodes.push({ id: position.account?.id.toString() });
+            edges.push({ id: `${triple.id}-${position.account?.id}`, from: triple.id.toString(), to: position.account?.id.toString() });
           });
 
           // Process triple vault
           const tripleVault = triple.vault;
-          tripleVault.positions?.items.forEach(position => {
-            nodes.push({ id: position.account.id.toString() });
-            edges.push({ id: `${triple.id}-${position.account.id}`, from: triple.id.toString(), to: position.account.id.toString() });
+          tripleVault?.positions?.forEach(position => {
+            nodes.push({ id: position.account?.id.toString() });
+            edges.push({ id: `${triple.id}-${position.account?.id}`, from: triple.id.toString(), to: position.account?.id.toString() });
           });
 
         });
@@ -143,28 +143,28 @@ export const Chat: React.FC = () => {
   }, [data]);
   useEffect(() => {
     if (data) {
-      const usd = data.chainlinkPrices.items[0].usd;
-      let systemMessage = 'You are a helpful assistant. Be precise and straight to the point. Do not show long account ids, when listing things. Here is the data from the intuition knowledge graph:';
+      const usd = data.chainLinkPrices[0].usd;
+      let systemMessage = 'Yku are a helpful assistant. Be precise and straight to the point. Do not show long account ids, when listing things. Here is the data from the intuition knowledge graph:';
       systemMessage += `\n\n\n User account: ${account} \n\n\n`;
 
-      data.things?.items.forEach(thing => {
+      data.things?.forEach(thing => {
         systemMessage += `\# ${thing.name}`;
-        systemMessage += `\n\n${thing.atom.value?.thing?.description}`;
+        systemMessage += `\n\n${thing.atom?.value?.thing?.description}`;
         systemMessage += `\n\nID: did:i7n:84532:${thing.atomId}`;
         systemMessage += `\n\n\n#### Claims: \n`;
-        thing.atom.asSubject?.items.forEach(triple => {
+        thing.atom?.asSubject?.forEach(triple => {
           systemMessage += ` - ${triple.label} \n`;
           //positions
-          systemMessage += `  - For (${triple.vault.positionCount}): \n`;
-          triple.vault.positions?.items.forEach(position => {
-            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.vault.currentSharePrice))) * usd;
-            systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account.label} Account: ${position.account.id} \n`;
+          systemMessage += `  - For (${triple.vault?.positionCount}): \n`;
+          triple.vault?.positions?.forEach(position => {
+            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.vault?.currentSharePrice))) * usd;
+            systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account?.label} Account: ${position.account?.id} \n`;
           });
           // counterVault
-          systemMessage += `  - Against (${triple.counterVault.positionCount}): \n`;
-          triple.counterVault.positions?.items.forEach(position => {
-            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.counterVault.currentSharePrice))) * usd;
-            systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account.label} Account: ${position.account.id} \n`;
+          systemMessage += `  - Against (${triple.counterVault?.positionCount}): \n`;
+          triple.counterVault?.positions?.forEach(position => {
+            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.counterVault?.currentSharePrice))) * usd;
+            systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account?.label} Account: ${position.account?.id} \n`;
           });
         });
         systemMessage += `\n\n\n`;
@@ -191,16 +191,16 @@ export const Chat: React.FC = () => {
       if (!data.account) {
         return "Account not found";
       }
-      const usd = data.chainlinkPrices.items[0].usd;
+      const usd = data.chainLinkPrices[0].usd;
 
       const result = {
         account_id: data.account.id,
         label: data.account.label,
-        positions: data.account.positions?.items.map((position) => {
+        positions: data.account.positions?.map((position) => {
           return {
-            vaultId: position.vault.id,
-            label: position.vault.atom?.label || position.vault.triple?.label,
-            stake: (parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(position.vault.currentSharePrice))) * usd).toFixed(2) + " USD",
+            vaultId: position.vault?.id,
+            label: position.vault?.atom?.label || position.vault?.triple?.label,
+            stake: (parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(position.vault?.currentSharePrice))) * usd).toFixed(2) + " USD",
           }
         }),
       };
@@ -256,7 +256,7 @@ export const Chat: React.FC = () => {
 
       const finalContent = await runner.finalContent();
 
-      setMessages([...newMessages, { role: 'assistant', content: finalContent }]);
+      setMessages([...newMessages, { role: 'assistant', content: `${finalContent}` }]);
     } catch (error: any) {
       console.error("Error generating summary:", error);
       return "Error generating summary. " + error;

@@ -37,7 +37,7 @@ export const Home: React.FC = () => {
   const { data, error, refetch } = useQuery(getThingsQuery, {
     variables: {
       url: currentUrl,
-      address: account,
+      address: account?.toLocaleLowerCase(),
     },
     skip: !currentUrl,
   });
@@ -48,45 +48,45 @@ export const Home: React.FC = () => {
       let edges: any[] = [];
 
       // Process things
-      data.things?.items.forEach(thing => {
+      data.things?.forEach(thing => {
         nodes.push({ id: thing.atomId.toString() });
 
         // Process atom
         const atom = thing.atom;
         // Process vault
-        const vault = atom.vault;
+        const vault = atom?.vault;
         // Process positions
-        vault.positions?.items.forEach(position => {
-          nodes.push({ id: position.account.id.toString() });
-          edges.push({ id: `${thing.atomId}-${position.account.id}`, from: thing.atomId.toString(), to: position.account.id.toString() });
+        vault?.positions?.forEach(position => {
+          nodes.push({ id: position.account?.id.toString() });
+          edges.push({ id: `${thing.atomId}-${position.account?.id}`, from: thing.atomId.toString(), to: position.account?.id.toString() });
         });
 
         // Process asSubject triples
-        atom.asSubject?.items.forEach(triple => {
+        atom?.asSubject?.forEach(triple => {
           nodes.push({ id: triple.id.toString() });
           edges.push({ id: `${thing.atomId}-${triple.id}`, from: thing.atomId.toString(), to: triple.id.toString() });
 
           // Object
-          nodes.push({ id: triple.object.id.toString() });
-          edges.push({ id: `${triple.id}-${triple.object.id}`, from: triple.id.toString(), to: triple.object.id.toString() });
+          nodes.push({ id: triple.object?.id.toString() });
+          edges.push({ id: `${triple.id}-${triple.object?.id}`, from: triple.id.toString(), to: triple.object?.id.toString() });
 
           // Predicate
-          nodes.push({ id: triple.predicate.id.toString() });
-          edges.push({ id: `${triple.object.id}-${triple.predicate.id}`, from: triple.object.id.toString(), to: triple.predicate.id.toString() });
+          nodes.push({ id: triple.predicate?.id.toString() });
+          edges.push({ id: `${triple.object?.id}-${triple.predicate?.id}`, from: triple.object?.id.toString(), to: triple.predicate?.id.toString() });
 
           // Subject
-          edges.push({ id: `${triple.predicate.id}-${thing.atomId}`, from: triple.predicate.id.toString(), to: thing.atomId.toString() });
+          edges.push({ id: `${triple.predicate?.id}-${thing.atomId}`, from: triple.predicate?.id.toString(), to: thing.atomId.toString() });
 
           // Process counterVault
           const counterVault = triple.counterVault;
-          counterVault.positions?.items.forEach(position => {
+          counterVault?.positions?.forEach(position => {
             nodes.push({ id: position.accountId.toString() });
             edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
           });
 
           // Process triple vault
           const tripleVault = triple.vault;
-          tripleVault.positions?.items.forEach(position => {
+          tripleVault?.positions?.forEach(position => {
             nodes.push({ id: position.accountId.toString() });
             edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
           });
@@ -211,10 +211,10 @@ export const Home: React.FC = () => {
     }
   };
 
-  if (!data?.things || data.things.items.length === 0 || showAtomForm) {
+  if (!data?.things || data.things.length === 0 || showAtomForm) {
     return <AtomForm />;
   }
-  const usd = data.chainlinkPrices.items[0].usd;
+  const usd = data.chainLinkPrices[0].usd;
 
   return (<>
     {!showAtomForm && <div className="flex justify-end items-center p-2"><button
@@ -223,17 +223,15 @@ export const Home: React.FC = () => {
     >
       Add
     </button></div>}
-    {data.things.items.map((thing) => {
+    {data.things.map((thing) => {
 
-      const myPosition = thing.atom.vault.myPosition?.items[0]?.shares;
-      const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
-      const totalStaked = parseFloat(formatEther(BigInt(thing.atom.vault.totalShares)))
-        * parseFloat(formatEther(BigInt(thing.atom.vault.currentSharePrice)));
+      const myPosition = thing.atom?.vault?.myPosition[0]?.shares;
+      const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(thing.atom?.vault?.currentSharePrice)));
+      const totalStaked = parseFloat(formatEther(BigInt(thing.atom?.vault?.totalShares)))
+        * parseFloat(formatEther(BigInt(thing.atom?.vault?.currentSharePrice)));
 
-      const tags = thing.atom.asSubject?.items.filter((item) => item.predicate.id === '4') || [];
-      const numberOfRemainingPositions = thing.atom.vault.positionCount <= 5 ? '' : `+${thing.atom.vault.positionCount - 5}`;
-
-
+      const tags = thing.atom?.asSubject?.filter((item) => item.predicate?.id === '4') || [];
+      const numberOfRemainingPositions = !thing.atom?.vault?.positionCount || thing.atom?.vault?.positionCount <= 5 ? '' : `+${thing.atom?.vault?.positionCount - 5}`;
 
       return (
         <div className="bg-slate-950 p-2">
@@ -249,20 +247,20 @@ export const Home: React.FC = () => {
                 </p>
               </div>
             </div>
-            <p className="text-sm text-slate-300 mt-2">{thing.atom.value?.thing?.description}</p>
+            <p className="text-sm text-slate-300 mt-2">{thing.atom?.value?.thing?.description}</p>
             <div className="flex flex-row mt-3 space-x-1">
               <button
-                title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom.vault.positionCount - 1} accounts \n My position: ${myPositionInEth.toFixed(6)} ETH (${(myPositionInEth * usd).toFixed(2)} USD)`}
+                title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${thing.atom?.vault?.positionCount || 0 - 1} accounts \n My position: ${myPositionInEth.toFixed(6)} ETH (${(myPositionInEth * usd).toFixed(2)} USD)`}
                 onClick={() => handleAtomClick(thing.atomId, myPosition)}
                 className={`space-x-1 flex flex-row items-center border border-sky-800 hover:bg-sky-700 text-green-100 text-xs p-1 px-2 rounded-full ${myPosition ? 'bg-sky-800' : 'bg-transparent'}`}>
                 <span className="text-sm">✓</span>
                 <div className="flex flex-row mr-3">
-                  {thing.atom.vault.positions?.items.filter((position) => position.account.type === 'Default').map((position) => (
+                  {thing.atom?.vault?.positions?.filter((position) => position.account?.type === 'Default').map((position) => (
                     <div style={{ marginRight: '-6px' }}
-                      key={position.account.id}>
+                      key={position.account?.id}>
                       <AccountImage
-                        id={position.account.id as `0x${string}`}
-                        image={position.account.image} />
+                        id={position.account?.id as `0x${string}`}
+                        image={position.account?.image} />
                     </div>
                   ))}
                 </div>
