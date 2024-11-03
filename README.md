@@ -10,6 +10,7 @@ The **Intuition Chrome Extension** is your gateway to accessing the Intuition kn
 - **Prevent Phishing Attacks**: Get real-time warnings about suspicious websites, leveraging trust signals from people you know and trust.
 - **Access Trusted Comments and Reviews**: See opinions, reviews, and insights from your trusted network wherever you go, helping you make better decisions and avoid misinformation.
 - **Keep Track of Your Discoveries**: Capture, organize, and revisit information you find online, keeping it accessible and connected to your Intuition knowledge graph, and allowing you to easily share it with others.
+- **AI-Powered Insights**: Ask AI questions about any site you're visiting. The AI uses the context of the Intuition knowledge graph to provide additional insights and relevant information, enhancing your understanding and decision-making across the web.
 
 Built with TypeScript and React, this extension offers a modern and reliable experience for browsing safely and staying informed, backed by Intuition's decentralized knowledge ecosystem.
 
