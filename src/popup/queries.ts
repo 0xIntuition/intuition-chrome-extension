@@ -297,3 +297,32 @@ query GetAccountInfo($address: String!) {
   }
 }
 `);
+
+export const getClaimsFromFollowingAboutSubject = gql(/* GraphQL */ `
+query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
+  claims_from_following(
+    args: { address: $address }
+    where: { subjectId: { _eq: $subjectId } }
+  ) {
+    shares
+    triple {
+      label
+      subject {
+        id
+        label
+      }
+      predicate {
+        id
+        label
+      }
+      object {
+        id
+        label
+      }
+    }
+    account {
+      id
+      label
+    }
+  }
+}`);
