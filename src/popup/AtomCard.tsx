@@ -4,33 +4,69 @@ import { AccountImage } from '../AccountImage.js';
 import { Tag } from './Claim.js';
 import { TagSearch } from './TagSearch.js';
 import { Spinner } from './Spinner.js';
+import { supportedChains } from './util.js';
 
 export interface Atom {
   id: number;
   label: string;
+  data: string;
   emoji: string;
   image: string;
-    value?: {
-      thing?: {
-        name?: string;
-        url?: string;
+  type: string;
+  value?: {
+    thing?: {
+      name?: string;
+      url?: string;
+      image?: string;
+      description?: string;
+    };
+    person?: {
+      name?: string;
+      url?: string;
+      image?: string;
+      description?: string;
+    };
+    organization?: {
+      name?: string;
+      url?: string;
+      image?: string;
+      description?: string;
+    };
+  } | null;
+  vault?: {
+    positionCount: number;
+    totalShares: string;
+    currentSharePrice: string;
+    myPosition: Array<{
+      shares: string;
+      accountId: string;
+    }>;
+    positions: Array<{
+      shares: string;
+      account?: {
+        id: string;
+        type: string;
         image?: string;
-        description?: string;
+        label?: string;
       };
-      person?: {
-        name?: string;
-        url?: string;
-        image?: string;
-        description?: string;
-      };
-      organization?: {
-        name?: string;
-        url?: string;
-        image?: string;
-        description?: string;
-      };
-    } | null;
-    vault?: {
+    }>;
+  } | null;
+  asSubject: Array<{
+    id: string;
+    object: {
+      id: string;
+      label?: string;
+      emoji?: string;
+      image?: string;
+    };
+    predicate: {
+      emoji?: string;
+      label?: string;
+      image?: string;
+      id: string;
+    };
+    counterVault: {
+      id: string;
       positionCount: number;
       totalShares: string;
       currentSharePrice: string;
@@ -40,58 +76,25 @@ export interface Atom {
       }>;
       positions: Array<{
         shares: string;
-        account?: {
-          id: string;
-          type: string;
-          image?: string;
-          label?: string;
-        };
+        accountId: string;
       }>;
-    } | null;
-    asSubject: Array<{
+    };
+    vault: {
       id: string;
-      object: {
-        id: string;
-        label?: string;
-        emoji?: string;
-        image?: string;
-      };
-      predicate: {
-        emoji?: string;
-        label?: string;
-        image?: string;
-        id: string;
-      };
-      counterVault: {
-        id: string;
-        positionCount: number;
-        totalShares: string;
-        currentSharePrice: string;
-        myPosition: Array<{
-          shares: string;
-          accountId: string;
-        }>;
-        positions: Array<{
-          shares: string;
-          accountId: string;
-        }>;
-      };
-      vault: {
-        id: string;
-        positionCount: number;
-        totalShares: string;
-        currentSharePrice: string;
-        myPosition: Array<{
-          shares: string;
-          accountId: string;
-        }>;
-        positions: Array<{
-          shares: string;
-          accountId: string;
-        }>;
-      };
-    }>;
-  
+      positionCount: number;
+      totalShares: string;
+      currentSharePrice: string;
+      myPosition: Array<{
+        shares: string;
+        accountId: string;
+      }>;
+      positions: Array<{
+        shares: string;
+        accountId: string;
+      }>;
+    };
+  }>;
+
 }
 
 interface AtomCardProps {
@@ -153,23 +156,23 @@ export const AtomCard: React.FC<AtomCardProps> = ({
     claimsAgainstCount: number,
   }> = [];
 
-// Group claims by triple ID
-const tripleGroups = claims.reduce((acc: { [key: string]: any[] }, claim: any) => {
-  const tripleId = claim.triple.id;
-  if (!acc[tripleId]) {
-    acc[tripleId] = [];
-  }
-  acc[tripleId].push(claim);
-  return acc;
-}, {});
+  // Group claims by triple ID
+  const tripleGroups = claims.reduce((acc: { [key: string]: any[] }, claim: any) => {
+    const tripleId = claim.triple.id;
+    if (!acc[tripleId]) {
+      acc[tripleId] = [];
+    }
+    acc[tripleId].push(claim);
+    return acc;
+  }, {});
 
-// Process each unique triple
-Object.entries(tripleGroups).forEach(([tripleId, claims]) => {
-  const claimsFor = claims.filter(claim => claim.shares > 0);
-  const claimsAgainst = claims.filter(claim => claim.counterShares > 0);
+  // Process each unique triple
+  Object.entries(tripleGroups).forEach(([tripleId, claims]) => {
+    const claimsFor = claims.filter(claim => claim.shares > 0);
+    const claimsAgainst = claims.filter(claim => claim.counterShares > 0);
 
-  triples.push({
-    triple: claims[0].triple,
+    triples.push({
+      triple: claims[0].triple,
       claimsForCount: claimsFor.length,
       claimsAgainstCount: claimsAgainst.length,
     });
@@ -190,7 +193,18 @@ Object.entries(tripleGroups).forEach(([tripleId, claims]) => {
     setTimeout(() => setSelectedTag(null), 1000);
   };
 
-  const description = atom.value?.thing?.description || atom.value?.person?.description || atom.value?.organization?.description;
+  let description = atom.value?.thing?.description || atom.value?.person?.description || atom.value?.organization?.description;
+
+  let isCaip10 = false;
+  if (atom.type === 'Unknown' && atom.data.startsWith('caip10:eip155:')) {
+    isCaip10 = true;
+    const chainId = atom.data.split(':')[2];
+    const address = atom.data.split(':')[3];
+    const chain = supportedChains.find((c) => c.id === parseInt(chainId));
+    if (chain) {
+      description = `${chain.name} contract`;
+    }
+  }
 
   return (
     <div className="bg-slate-950 p-2">
@@ -198,7 +212,7 @@ Object.entries(tripleGroups).forEach(([tripleId, claims]) => {
         <div className="flex items-center space-x-4 mb-3">
           {atom.image && <img src={atom.image} className="w-16 h-16 rounded-full object-cover object-center" />}
           <div>
-            <h2 className="text-xl font-bold text-slate-200">{atom.label}</h2>
+            <h2 className="text-xl font-bold text-slate-200">{isCaip10 ? `${atom.data.split(':')[3].slice(0, 6)}...${atom.data.split(':')[3].slice(-4)}` : atom.label}</h2>
             <p>
               <button onClick={() => openAtom(atom.id)} className="text-xs text-slate-600 hover:text-slate-400">
                 did:i7n:84532:{atom.id}
@@ -232,11 +246,11 @@ Object.entries(tripleGroups).forEach(([tripleId, claims]) => {
           </button>
 
           {showGlobalClaims && tags?.length > 0 && (tags.map((tag, index) => (
-            <Tag key={index} tag={tag} account={account} refetch={() => {}} />
+            <Tag key={index} tag={tag} account={account} refetch={() => { }} />
           )))}
 
           {!showGlobalClaims && triples?.length > 0 && (triples.map((triple, index) => (
-            <Tag key={index} tag={triple.triple} account={account} refetch={() => {}} claimsForCount={triple.claimsForCount} claimsAgainstCount={triple.claimsAgainstCount} />
+            <Tag key={index} tag={triple.triple} account={account} refetch={() => { }} claimsForCount={triple.claimsForCount} claimsAgainstCount={triple.claimsAgainstCount} />
           ))
           )}
           <button onClick={() => setShowTagSearch(!showTagSearch)} className="flex items-center border border-slate-800 text-slate-100 hover:border-slate-700 hover:bg-slate-700 hover:text-slate-200 text-xs rounded-full space-x-2 px-2 h-7 bg-transparent">

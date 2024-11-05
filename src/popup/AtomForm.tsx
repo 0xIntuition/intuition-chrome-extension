@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { Spinner } from "./Spinner";
 import { PinataSDK } from "pinata-web3"
 import { useMultiVault } from './intuition-react/useMultiVault.js';
-import { Address, parseEther } from "viem";
+import { Address, Chain, isAddress, parseEther } from "viem";
+import { isSmartContract, supportedChains } from "./util";
 
 export const AtomForm = () => {
+  const [chainId, setChainId] = useState<number | undefined>(undefined);
   const [type, setType] = useState<'url' | 'address' | 'caip10'>('url');
   const [uri, setUri] = useState<string | undefined>(undefined);
   const [openai, setOpenai] = useState<OpenAI | null>(null);
@@ -42,18 +44,31 @@ export const AtomForm = () => {
   }, []);
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       const tabId = tabs[0]!.id!;
       const url = tabs[0]!.url;
+
       // extract ethereum address from url
       const address = url?.match(/0x[a-fA-F0-9]{40}/)?.[0];
-      console.log('address', address?.toLowerCase());
-      if (address) {
-        setCurrentUrl(address.toLowerCase());
-        setUri(address.toLowerCase());
-        setLabel(address.slice(0, 6) + '...' + address.slice(-4));
-        setDescription('Ethereum account');
-        setType('address');
+
+      if (address && isAddress(address)) {
+        const chain = supportedChains.find((c) => url.startsWith(c.blockExplorers.default.url));
+        if (chain) {
+          const chainId = chain.id;
+          const isContract = await isSmartContract(address, chain);
+          if (isContract) {
+            setUri(`caip10:eip155:${chainId}:${address}`);
+            setLabel(address.slice(0, 6) + '...' + address.slice(-4));
+            setDescription(`Contract on ${chain.name}`);
+            setType('caip10');
+          }
+        } else {
+          setCurrentUrl(address.toLowerCase());
+          setUri(address.toLowerCase());
+          setLabel(address.slice(0, 6) + '...' + address.slice(-4));
+          setDescription('Ethereum account');
+          setType('address');
+        }
       } else {
         chrome.scripting.executeScript({
           target: { tabId },
