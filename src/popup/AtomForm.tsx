@@ -61,13 +61,13 @@ export const AtomForm = () => {
             setLabel(address.slice(0, 6) + '...' + address.slice(-4));
             setDescription(`Contract on ${chain.name}`);
             setType('caip10');
+          } else {
+            setCurrentUrl(address.toLowerCase());
+            setUri(address.toLowerCase());
+            setLabel(address.slice(0, 6) + '...' + address.slice(-4));
+            setDescription('Ethereum account');
+            setType('address');
           }
-        } else {
-          setCurrentUrl(address.toLowerCase());
-          setUri(address.toLowerCase());
-          setLabel(address.slice(0, 6) + '...' + address.slice(-4));
-          setDescription('Ethereum account');
-          setType('address');
         }
       } else {
         chrome.scripting.executeScript({
