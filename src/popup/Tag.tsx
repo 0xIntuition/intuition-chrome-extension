@@ -8,25 +8,26 @@ interface TagProps {
   account?: Address;
   tag: {
     object?: {
+      emoji?: string | null;
       image?: string | null;
       label?: string | null;
     } | null;
     vault?: {
       id: string;
       positionCount: number;
-      totalShares: number;
-      currentSharePrice: number;
+      totalShares: string;
+      currentSharePrice: string;
       myPosition: {
-        shares: number;
+        shares: string;
       }[];
     } | null;
     counterVault?: {
       id: string;
       positionCount: number;
-      totalShares: number;
-      currentSharePrice: number;
+      totalShares: string;
+      currentSharePrice: string;
       myPosition: {
-        shares: number;
+        shares: string;
       }[];
     } | null;
   };
@@ -71,7 +72,7 @@ export const Tag: React.FC<TagProps> = ({ tag, account, refetch }) => {
     }
   };
 
-  const redeemTriple = async (vaultId: string, amount: number) => {
+  const redeemTriple = async (vaultId: string, amount: string) => {
     setLoading(true);
     const tx = await multivault.redeemTriple(BigInt(vaultId), BigInt(amount));
     console.log(tx);

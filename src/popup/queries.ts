@@ -305,19 +305,55 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
     where: { subjectId: { _eq: $subjectId } }
   ) {
     shares
+    counterShares
     triple {
+      id
+      vaultId
+      counterVaultId
       label
       subject {
-        id
+        emoji
         label
+        image
+        id
       }
       predicate {
-        id
+        emoji
         label
+        image
+        id
       }
       object {
-        id
+        emoji
         label
+        image
+        id
+      }
+      counterVault {
+        id
+        positionCount
+        totalShares
+        currentSharePrice
+        myPosition: positions(
+          limit: 1
+          where: { accountId: { _eq: $address } }
+        ) {
+          shares
+          accountId
+        }
+      }
+      vault {
+        id
+        positionCount
+        totalShares
+        currentSharePrice
+        myPosition: positions(
+          limit: 1
+          where: { accountId: { _eq: $address } }
+        ) {
+          shares
+          accountId
+        }
       }
     }
     account {
@@ -325,4 +361,5 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
       label
     }
   }
-}`);
+}
+`);
