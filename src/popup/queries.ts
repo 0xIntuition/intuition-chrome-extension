@@ -363,3 +363,117 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
   }
 }
 `);
+
+export const searchAtomsByUriQuery = gql(/* GraphQL */ `
+  query SearchAtomsByUri($uri: String, $address: String) {
+  atoms(
+    where: {
+      _or: [
+        { data: { _eq: $uri } }
+        { value: { thing: { url: { _eq: $uri } } } }
+        { value: { person: { url: { _eq: $uri } } } }
+        { value: { organization: { url: { _eq: $uri } } } }
+        { value: { book: { url: { _eq: $uri } } } }
+      ]
+    }
+  ) {
+    id
+    data
+    type
+    label
+    image
+    emoji
+    value {
+      person {
+        name
+        image
+        description
+        email
+        identifier
+      }
+      thing {
+        url
+        name
+        image
+        description
+      }
+      organization {
+        name
+        email
+        description
+        url
+      }
+    }
+    vault {
+      positionCount
+      totalShares
+      currentSharePrice
+      myPosition: positions(limit: 1, where: { accountId: { _eq: $address } }) {
+        shares
+        accountId
+      }
+      positions(order_by: { shares: desc }, limit: 5) {
+        shares
+        account {
+          id
+          type
+          image
+          label
+        }
+      }
+    }
+    asSubject {
+      id
+      object {
+        id
+        label
+        emoji
+        image
+      }
+      predicate {
+        emoji
+        label
+        image
+        id
+      }
+      counterVault {
+        id
+        positionCount
+        totalShares
+        currentSharePrice
+        myPosition: positions(
+          limit: 1
+          where: { accountId: { _eq: $address } }
+        ) {
+          shares
+          accountId
+        }
+        positions {
+          shares
+          accountId
+        }
+      }
+      vault {
+        id
+        positionCount
+        totalShares
+        currentSharePrice
+        myPosition: positions(
+          limit: 1
+          where: { accountId: { _eq: $address } }
+        ) {
+          shares
+          accountId
+        }
+        positions {
+          shares
+          accountId
+        }
+      }
+    }
+  }
+  chainLinkPrices(limit: 1, order_by: { id: desc }) {
+    usd
+  }
+}
+`);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Address, formatEther, parseEther } from 'viem';
 import { useQuery } from '@apollo/client';
-import { getThingsQuery, getClaimsFromFollowingAboutSubject } from './queries.js';
+import { getThingsQuery, getClaimsFromFollowingAboutSubject, searchAtomsByUriQuery } from './queries.js';
 import { AccountImage } from '../AccountImage.js';
 import { Tag } from './Tag.js';
 import { useMultiVault } from './intuition-react/useMultiVault.js';
@@ -9,7 +9,7 @@ import { TagSearch } from './TagSearch';
 import { Spinner } from './Spinner.js';
 import { AtomForm } from './AtomForm.js';
 import { useGraphData, defaultSettings } from './GraphDataContext';
-import { Thing, ThingCard } from './ThingCard';
+import { Atom, AtomCard } from './AtomCard.js';
 
 
 export const Home: React.FC = () => {
@@ -24,7 +24,14 @@ export const Home: React.FC = () => {
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const url = tabs[0]!.url;
-      setCurrentUrl(url);
+      // extract ethereum address from url
+      const address = url?.match(/0x[a-fA-F0-9]{40}/)?.[0];
+      console.log('address', address?.toLowerCase() );
+      if (address) {
+        setCurrentUrl(address.toLowerCase());
+      } else {
+        setCurrentUrl(url);
+      }
     });
   }, []);
 
@@ -35,9 +42,9 @@ export const Home: React.FC = () => {
     }
   }, []);
 
-  const { data, error, refetch } = useQuery(getThingsQuery, {
+  const { data, error, refetch } = useQuery(searchAtomsByUriQuery, {
     variables: {
-      url: currentUrl,
+      uri: currentUrl,
       address: account?.toLocaleLowerCase(),
     },
     skip: !currentUrl,
@@ -49,23 +56,21 @@ export const Home: React.FC = () => {
       let edges: any[] = [];
 
       // Process things
-      data.things?.forEach(thing => {
-        nodes.push({ id: thing.atomId.toString() });
+      data.atoms?.forEach(atom => {
+        nodes.push({ id: atom.id.toString() });
 
-        // Process atom
-        const atom = thing.atom;
         // Process vault
         const vault = atom?.vault;
         // Process positions
         vault?.positions?.forEach(position => {
           nodes.push({ id: position.account?.id.toString() });
-          edges.push({ id: `${thing.atomId}-${position.account?.id}`, from: thing.atomId.toString(), to: position.account?.id.toString() });
+          edges.push({ id: `${atom.id}-${position.account?.id}`, from: atom.id.toString(), to: position.account?.id.toString() });
         });
 
         // Process asSubject triples
         atom?.asSubject?.forEach(triple => {
           nodes.push({ id: triple.id.toString() });
-          edges.push({ id: `${thing.atomId}-${triple.id}`, from: thing.atomId.toString(), to: triple.id.toString() });
+          edges.push({ id: `${atom.id}-${triple.id}`, from: atom.id.toString(), to: triple.id.toString() });
 
           // Object
           nodes.push({ id: triple.object?.id.toString() });
@@ -76,7 +81,7 @@ export const Home: React.FC = () => {
           edges.push({ id: `${triple.object?.id}-${triple.predicate?.id}`, from: triple.object?.id.toString(), to: triple.predicate?.id.toString() });
 
           // Subject
-          edges.push({ id: `${triple.predicate?.id}-${thing.atomId}`, from: triple.predicate?.id.toString(), to: thing.atomId.toString() });
+          edges.push({ id: `${triple.predicate?.id}-${atom.id}`, from: triple.predicate?.id.toString(), to: atom.id.toString() });
 
           // Process counterVault
           const counterVault = triple.counterVault;
@@ -222,7 +227,7 @@ export const Home: React.FC = () => {
     }
   };
 
-  if (!data?.things || data.things.length === 0 || showAtomForm) {
+  if (!data?.atoms || data.atoms.length === 0 || showAtomForm) {
     return <AtomForm />;
   }
   const usd = data.chainLinkPrices[0].usd;
@@ -234,10 +239,10 @@ export const Home: React.FC = () => {
     >
       Add
     </button></div>}
-    {data.things.map((thing) => (
-      <ThingCard
-        key={thing.atomId}
-        thing={thing as Thing}
+    {data.atoms.map((atom) => (
+      <AtomCard
+        key={atom.id}
+        atom={atom as Atom}
         account={account}
         usd={usd}
         handleTagSelected={handleTagSelected}
