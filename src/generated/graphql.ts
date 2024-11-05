@@ -65,7 +65,13 @@ export type String_Comparison_Exp = {
   _similar?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type Accounts = {
   __typename?: 'accounts';
   /** An object relationship */
@@ -110,7 +116,13 @@ export type Accounts = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsClaimsArgs = {
   distinct_on?: InputMaybe<Array<Claims_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -120,7 +132,13 @@ export type AccountsClaimsArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsClaims_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Claims_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -130,7 +148,13 @@ export type AccountsClaims_AggregateArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsCreatedAtomsArgs = {
   distinct_on?: InputMaybe<Array<Atoms_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -140,7 +164,13 @@ export type AccountsCreatedAtomsArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsCreatedAtoms_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Atoms_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -150,7 +180,13 @@ export type AccountsCreatedAtoms_AggregateArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsCreatedTriplesArgs = {
   distinct_on?: InputMaybe<Array<Triples_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -160,7 +196,13 @@ export type AccountsCreatedTriplesArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsCreatedTriples_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Triples_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -170,7 +212,13 @@ export type AccountsCreatedTriples_AggregateArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsDepositsArgs = {
   distinct_on?: InputMaybe<Array<Deposits_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -180,7 +228,13 @@ export type AccountsDepositsArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsDeposits_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Deposits_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -190,7 +244,13 @@ export type AccountsDeposits_AggregateArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsFeeTransfersArgs = {
   distinct_on?: InputMaybe<Array<FeeTranfers_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -200,7 +260,13 @@ export type AccountsFeeTransfersArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsFeeTransfers_AggregateArgs = {
   distinct_on?: InputMaybe<Array<FeeTranfers_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -210,7 +276,13 @@ export type AccountsFeeTransfers_AggregateArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsPositionsArgs = {
   distinct_on?: InputMaybe<Array<Positions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -220,7 +292,13 @@ export type AccountsPositionsArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsPositions_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Positions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -230,7 +308,13 @@ export type AccountsPositions_AggregateArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsRedemptionsArgs = {
   distinct_on?: InputMaybe<Array<Redemptions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -240,7 +324,13 @@ export type AccountsRedemptionsArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsRedemptions_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Redemptions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -250,7 +340,13 @@ export type AccountsRedemptions_AggregateArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsSignalsArgs = {
   distinct_on?: InputMaybe<Array<Signals_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -260,7 +356,13 @@ export type AccountsSignalsArgs = {
 };
 
 
-/** columns and relationships of "Account" */
+/**
+ * Ethereum blockchain account, wallet address
+ *
+ *
+ * columns and relationships of "Account"
+ *
+ */
 export type AccountsSignals_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Signals_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -6797,6 +6899,14 @@ export type GetAccountInfoQueryVariables = Exact<{
 
 export type GetAccountInfoQuery = { __typename?: 'query_root', account?: { __typename?: 'accounts', image?: string | null, label: string, id: string, positions: Array<{ __typename?: 'positions', id: string, shares: any, vault?: { __typename?: 'vaults', id: any, positionCount: number, totalShares: any, currentSharePrice: any, atom?: { __typename?: 'atoms', id: any, label?: string | null, image?: string | null } | null, triple?: { __typename?: 'triples', id: any, label?: string | null, subject?: { __typename?: 'atoms', id: any, image?: string | null, label?: string | null } | null, predicate?: { __typename?: 'atoms', id: any, image?: string | null, label?: string | null } | null, object?: { __typename?: 'atoms', id: any, image?: string | null, label?: string | null } | null } | null } | null }> } | null, chainLinkPrices: Array<{ __typename?: 'chainLinkPrices', usd: any }> };
 
+export type ClaimsFromFollowingAboutSubjectQueryVariables = Exact<{
+  address: Scalars['String']['input'];
+  subjectId: Scalars['numeric']['input'];
+}>;
+
+
+export type ClaimsFromFollowingAboutSubjectQuery = { __typename?: 'query_root', claims_from_following: Array<{ __typename?: 'claims', shares: any, counterShares: any, triple?: { __typename?: 'triples', id: any, vaultId: any, counterVaultId: any, label?: string | null, subject?: { __typename?: 'atoms', emoji?: string | null, label?: string | null, image?: string | null, id: any } | null, predicate?: { __typename?: 'atoms', emoji?: string | null, label?: string | null, image?: string | null, id: any } | null, object?: { __typename?: 'atoms', emoji?: string | null, label?: string | null, image?: string | null, id: any } | null, counterVault?: { __typename?: 'vaults', id: any, positionCount: number, totalShares: any, currentSharePrice: any, myPosition: Array<{ __typename?: 'positions', shares: any, accountId: string }> } | null, vault?: { __typename?: 'vaults', id: any, positionCount: number, totalShares: any, currentSharePrice: any, myPosition: Array<{ __typename?: 'positions', shares: any, accountId: string }> } | null } | null, account?: { __typename?: 'accounts', id: string, label: string } | null }> };
+
 
 export const GetMyPositionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMyPosition"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"numeric"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"accountId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"vaultId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}}]}}]}}]} as unknown as DocumentNode<GetMyPositionQuery, GetMyPositionQueryVariables>;
 export const GetThingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetThings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"url"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"things"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"url"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"url"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"atomId"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"atom"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"vault"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"positionCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalShares"}},{"kind":"Field","name":{"kind":"Name","value":"currentSharePrice"}},{"kind":"Field","alias":{"kind":"Name","value":"myPosition"},"name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"accountId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"accountId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"shares"},"value":{"kind":"EnumValue","value":"desc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"5"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"account"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"asSubject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"object"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}},{"kind":"Field","name":{"kind":"Name","value":"predicate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"counterVault"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"positionCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalShares"}},{"kind":"Field","name":{"kind":"Name","value":"currentSharePrice"}},{"kind":"Field","alias":{"kind":"Name","value":"myPosition"},"name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"accountId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"accountId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"positions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"accountId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"vault"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"positionCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalShares"}},{"kind":"Field","name":{"kind":"Name","value":"currentSharePrice"}},{"kind":"Field","alias":{"kind":"Name","value":"myPosition"},"name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"accountId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"accountId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"positions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"accountId"}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"chainLinkPrices"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usd"}}]}}]}}]} as unknown as DocumentNode<GetThingsQuery, GetThingsQueryVariables>;
@@ -6805,3 +6915,4 @@ export const GetMyPositionsDocument = {"kind":"Document","definitions":[{"kind":
 export const SearchAtomsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SearchAtoms"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"label"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"atoms"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"blockTimestamp"},"value":{"kind":"EnumValue","value":"desc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"30"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"ListValue","values":[{"kind":"StringValue","value":"Thing","block":false},{"kind":"StringValue","value":"Person","block":false},{"kind":"StringValue","value":"Organization","block":false}]}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"label"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_ilike"},"value":{"kind":"Variable","name":{"kind":"Name","value":"label"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]} as unknown as DocumentNode<SearchAtomsQuery, SearchAtomsQueryVariables>;
 export const GetAccountProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAccountProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"account"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetAccountProfileQuery, GetAccountProfileQueryVariables>;
 export const GetAccountInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAccountInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"account"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"accountId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"vault"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"positionCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalShares"}},{"kind":"Field","name":{"kind":"Name","value":"currentSharePrice"}},{"kind":"Field","name":{"kind":"Name","value":"atom"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}},{"kind":"Field","name":{"kind":"Name","value":"triple"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"subject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"predicate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}},{"kind":"Field","name":{"kind":"Name","value":"object"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"chainLinkPrices"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usd"}}]}}]}}]} as unknown as DocumentNode<GetAccountInfoQuery, GetAccountInfoQueryVariables>;
+export const ClaimsFromFollowingAboutSubjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ClaimsFromFollowingAboutSubject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"subjectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"numeric"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"claims_from_following"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"args"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"address"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"subjectId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"subjectId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"counterShares"}},{"kind":"Field","name":{"kind":"Name","value":"triple"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"vaultId"}},{"kind":"Field","name":{"kind":"Name","value":"counterVaultId"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"subject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"predicate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"object"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"emoji"}},{"kind":"Field","name":{"kind":"Name","value":"label"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"counterVault"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"positionCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalShares"}},{"kind":"Field","name":{"kind":"Name","value":"currentSharePrice"}},{"kind":"Field","alias":{"kind":"Name","value":"myPosition"},"name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"accountId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"accountId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"vault"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"positionCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalShares"}},{"kind":"Field","name":{"kind":"Name","value":"currentSharePrice"}},{"kind":"Field","alias":{"kind":"Name","value":"myPosition"},"name":{"kind":"Name","value":"positions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"accountId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shares"}},{"kind":"Field","name":{"kind":"Name","value":"accountId"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"account"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"label"}}]}}]}}]}}]} as unknown as DocumentNode<ClaimsFromFollowingAboutSubjectQuery, ClaimsFromFollowingAboutSubjectQueryVariables>;
