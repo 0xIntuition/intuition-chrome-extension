@@ -6,6 +6,8 @@ import { useMultiVault } from './intuition-react/useMultiVault.js';
 import { Address, parseEther } from "viem";
 
 export const AtomForm = () => {
+  const [type, setType] = useState<'url' | 'address' | 'caip10'>('url');
+  const [uri, setUri] = useState<string | undefined>(undefined);
   const [openai, setOpenai] = useState<OpenAI | null>(null);
   const [pinata, setPinata] = useState<PinataSDK | null>(null);
   const [account, setAccount] = useState<Address | undefined>(undefined);
@@ -41,25 +43,38 @@ export const AtomForm = () => {
 
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const tabId = tabs[0]!.id!;
-    const url = tabs[0]!.url;
-    const cleanUrl = url?.endsWith('/') ? url?.slice(0, -1) : url;
-    setCurrentUrl(cleanUrl);
-    chrome.scripting.executeScript({
-      target: { tabId },
-      func: extractOpenGraphTags,
-    }).then((results) => {
-      console.log(results);
-      const ogTags = results[0]!.result;
-      if (ogTags) {
-        setLabel(ogTags.title || '');
-        setDescription(ogTags.description || '');
-        setImage(ogTags.image || '');
-        setContent(ogTags.content || '');
+      const tabId = tabs[0]!.id!;
+      const url = tabs[0]!.url;
+      // extract ethereum address from url
+      const address = url?.match(/0x[a-fA-F0-9]{40}/)?.[0];
+      console.log('address', address?.toLowerCase());
+      if (address) {
+        setCurrentUrl(address.toLowerCase());
+        setUri(address.toLowerCase());
+        setLabel(address.slice(0, 6) + '...' + address.slice(-4));
+        setDescription('Ethereum account');
+        setType('address');
+      } else {
+        chrome.scripting.executeScript({
+          target: { tabId },
+          func: extractOpenGraphTags,
+        }).then((results) => {
+          console.log(results);
+          const ogTags = results[0]!.result;
+          if (ogTags) {
+            setLabel(ogTags.title || '');
+            setDescription(ogTags.description || '');
+            setImage(ogTags.image || '');
+            setContent(ogTags.content || '');
+          }
+        });
+        setCurrentUrl(url);
+        setUri(url);
+        setType('url');
       }
-    });
 
-  });
+
+    });
   }, []);
 
   const [label, setLabel] = useState('');
@@ -74,7 +89,7 @@ export const AtomForm = () => {
       return;
     }
     try {
-      setLoading(true); 
+      setLoading(true);
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [{ role: "user", content: `Summarize in one paragraph the following website: ${content}` }],
@@ -87,21 +102,28 @@ export const AtomForm = () => {
   };
 
   async function handleCreateAtom(): Promise<void> {
-    setCreatingAtom(true);
-    setProgressMessage('Uploading to IPFS...');
-    const json = {
-      '@context': 'https://schema.org',
-      '@type': 'Thing',
-      name: label,
-      description,
-      url: currentUrl,
-      image: image,
-    }
-    console.log(json);
-    const result = await pinata?.upload.json(json);
-    console.log(result);
-    if (!result) {
+    if (!uri) {
       return;
+    }
+    let finalUri = uri;
+    setCreatingAtom(true);
+    if (type === 'url') {
+      setProgressMessage('Uploading to IPFS...');
+      const json = {
+        '@context': 'https://schema.org',
+        '@type': 'Thing',
+        name: label,
+        description,
+        url: currentUrl,
+        image: image,
+      }
+      console.log(json);
+      const result = await pinata?.upload.json(json);
+      console.log(result);
+      if (!result) {
+        return;
+      }
+      finalUri = 'ipfs://' + result.IpfsHash;
     }
 
     try {
@@ -118,7 +140,7 @@ export const AtomForm = () => {
       setAccount(account);
 
       const { hash } = await multivault.createAtom({
-        uri: 'ipfs://'+result.IpfsHash,
+        uri: finalUri,
         initialDeposit: parseEther('0.00042'),
       });
       setProgressMessage(undefined);
@@ -157,19 +179,19 @@ export const AtomForm = () => {
         >
           {description}
         </p>
-        <button
+        {type === 'url' && <button
           className="text-slate-600 hover:text-slate-200"
           onClick={summarize}>
           {loading ? <Spinner /> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 16 16"  ><path fill-rule="evenodd" clip-rule="evenodd" fill='currentColor' d="M7.2757 4.82358C7.57934 4.71847 7.57934 4.53161 7.2757 4.41483L5.62905 3.78419C5.33709 3.67908 4.99842 3.3404 4.88164 3.03676L4.25101 1.39009C4.1459 1.08644 3.95905 1.08644 3.84226 1.39009L3.21163 3.03676C3.10653 3.32872 2.76786 3.6674 2.46422 3.78419L0.817572 4.41483C0.513934 4.51994 0.513934 4.70679 0.817572 4.82358L2.46422 5.45422C2.75618 5.55933 3.09485 5.898 3.21163 6.20165L3.84226 7.84832C3.94737 8.15196 4.13422 8.15196 4.25101 7.84832L4.88164 6.20165C4.98674 5.90968 5.32541 5.571 5.62905 5.45422L7.2757 4.82358ZM15.2991 10.5929C16.2334 10.3593 16.2334 9.9739 15.2991 9.74032L13.2321 9.22647C12.2978 8.9929 11.3402 8.03526 11.1066 7.10097L10.5928 5.03387C10.3592 4.09959 9.97382 4.09959 9.74025 5.03387L9.2264 7.10097C8.99283 8.03526 8.03521 8.9929 7.10094 9.22647L5.03387 9.74032C4.09961 9.9739 4.09961 10.3593 5.03387 10.5929L7.10094 11.1067C8.03521 11.3403 8.99283 12.2979 9.2264 13.2322L9.74025 15.2993C9.97382 16.2336 10.3592 16.2336 10.5928 15.2993L11.1066 13.2322C11.3402 12.2979 12.2978 11.3403 13.2321 11.1067L15.2991 10.5929Z"></path></svg>}
-        </button>
+        </button>}
         <div className="flex flex-row mt-3 space-x-1">
           <button
             onClick={handleCreateAtom}
             className={`space-x-1 flex flex-row items-center border border-sky-800 hover:bg-sky-700 text-green-100 text-xs p-1 px-2 rounded-full`}>
-            
+
             {creatingAtom ? <Spinner /> : <span className="text-sm">✓</span>}
             {progressMessage && <span className="text-sm ml-2">{progressMessage}</span>}
-            
+
           </button>
           {errorMessage && <span className="text-sm ml-2 text-red-500">{errorMessage}</span>}
         </div>
@@ -184,7 +206,7 @@ function extractOpenGraphTags() {
   const title = document.title;
   const domain = document.location.hostname;
   const description = document.querySelector('meta[name="description"]')?.getAttribute('content');
-  let image = document.querySelector('meta[property="og:image"]')?.getAttribute('content');  
+  let image = document.querySelector('meta[property="og:image"]')?.getAttribute('content');
 
   if (image && !image.startsWith('http')) {
     image = `https://${domain}${image}`;
