@@ -57,7 +57,7 @@ export const Home: React.FC = () => {
   const { data, error, refetch } = useQuery(searchAtomsByUriQuery, {
     variables: {
       uri: currentUrl,
-      address: account?.toLocaleLowerCase(),
+      address: account?.toLocaleLowerCase() || '',
     },
     skip: !currentUrl,
   });
