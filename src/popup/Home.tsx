@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Address, formatEther, isAddress, parseEther } from 'viem';
 import { useQuery } from '@apollo/client';
 import { getThingsQuery, getClaimsFromFollowingAboutSubject, searchAtomsByUriQuery } from './queries.js';
-import { AccountImage } from '../AccountImage.js';
+import { AccountImage } from './AccountImage.js';
 import { Tag } from './Tag.js';
 import { useMultiVault } from './intuition-react/useMultiVault.js';
 import { TagSearch } from './TagSearch';

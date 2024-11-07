@@ -1,6 +1,6 @@
 import React from 'react';
 import { Address, formatEther } from 'viem';
-import { AccountImage } from '../AccountImage.js';
+import { AccountImage } from './AccountImage.js';
 import { Tag } from './Claim.js';
 import { TagSearch } from './TagSearch.js';
 import { Spinner } from './Spinner.js';
