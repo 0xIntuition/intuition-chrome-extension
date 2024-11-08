@@ -48,26 +48,23 @@ export const AtomForm = () => {
       const tabId = tabs[0]!.id!;
       const url = tabs[0]!.url;
 
+      const chain = supportedChains.find((c) => url?.startsWith(c.blockExplorers.default.url));
       // extract ethereum address from url
       const address = url?.match(/0x[a-fA-F0-9]{40}/)?.[0];
 
-      if (address && isAddress(address)) {
-        const chain = supportedChains.find((c) => url.startsWith(c.blockExplorers.default.url));
-        if (chain) {
-          const chainId = chain.id;
-          const isContract = await isSmartContract(address, chain);
-          if (isContract) {
-            setUri(`caip10:eip155:${chainId}:${address}`);
-            setLabel(address.slice(0, 6) + '...' + address.slice(-4));
-            setDescription(`Contract on ${chain.name}`);
-            setType('caip10');
-          } else {
-            setCurrentUrl(address.toLowerCase());
-            setUri(address.toLowerCase());
-            setLabel(address.slice(0, 6) + '...' + address.slice(-4));
-            setDescription('Ethereum account');
-            setType('address');
-          }
+      if (chain && address && isAddress(address)) {
+        const isContract = await isSmartContract(address, chain);
+        if (isContract) {
+          setUri(`caip10:eip155:${chain.id}:${address}`);
+          setLabel(address.slice(0, 6) + '...' + address.slice(-4));
+          setDescription(`Contract on ${chain.name}`);
+          setType('caip10');
+        } else {
+          setCurrentUrl(address.toLowerCase());
+          setUri(address.toLowerCase());
+          setLabel(address.slice(0, 6) + '...' + address.slice(-4));
+          setDescription('Ethereum account');
+          setType('address');
         }
       } else {
         chrome.scripting.executeScript({

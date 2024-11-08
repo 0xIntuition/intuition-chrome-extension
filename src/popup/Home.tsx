@@ -25,21 +25,18 @@ export const Home: React.FC = () => {
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       const url = tabs[0]!.url;
-      // extract ethereum address from url
-      const address = url?.match(/0x[a-fA-F0-9]{40}/)?.[0];
-      console.log('address', address?.toLowerCase());
-      if (address && isAddress(address)) {
-        const chain = supportedChains.find((c) => url.startsWith(c.blockExplorers.default.url));
-        if (!chain) {
-          return;
-        }
-        const chainId = chain.id;
-
-        const isContract = await isSmartContract(address, chain);
-        if (!isContract) {
-          setCurrentUrl(address.toLowerCase());
-        } else {
-          setCurrentUrl(`caip10:eip155:${chainId}:${address.toLowerCase()}`);
+      const chain = supportedChains.find((c) => url?.startsWith(c.blockExplorers.default.url));
+      if (chain) {
+        // extract ethereum address from url
+        const address = url?.match(/0x[a-fA-F0-9]{40}/)?.[0];
+        console.log('address', address?.toLowerCase());
+        if (address && isAddress(address)) {
+          const isContract = await isSmartContract(address, chain);
+          if (!isContract) {
+            setCurrentUrl(address.toLowerCase());
+          } else {
+            setCurrentUrl(`caip10:eip155:${chain.id}:${address.toLowerCase()}`);
+          }
         }
       } else {
         setCurrentUrl(url);
