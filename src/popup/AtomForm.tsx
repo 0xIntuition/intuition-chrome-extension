@@ -55,7 +55,7 @@ export const AtomForm = () => {
       if (chain && address && isAddress(address)) {
         const isContract = await isSmartContract(address, chain);
         if (isContract) {
-          setUri(`caip10:eip155:${chain.id}:${address}`);
+          setUri(`caip10:eip155:${chain.id}:${address.toLowerCase()}`);
           setLabel(address.slice(0, 6) + '...' + address.slice(-4));
           setDescription(`Contract on ${chain.name}`);
           setType('caip10');
