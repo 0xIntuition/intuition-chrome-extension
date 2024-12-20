@@ -465,3 +465,11 @@ query SearchAtomsByUri($uri: String, $address: String) {
     }
   }
 }`);
+
+export const pinThingMutation = gql(/* GraphQL */ `
+mutation PinThing($thing: PinThingInput!) {
+  pinThing(thing: $thing) {
+    uri
+  }
+}
+`);
