@@ -64,7 +64,7 @@ export const Chat: React.FC = () => {
 
       // Process things
       data.things?.forEach(thing => {
-        nodes.push({ id: thing.atomId.toString() });
+        nodes.push({ id: thing.id.toString() });
 
         // Process atom
         const atom = thing.atom;
@@ -73,13 +73,13 @@ export const Chat: React.FC = () => {
         // Process positions
         vault?.positions?.forEach(position => {
           nodes.push({ id: position.account?.id.toString() });
-          edges.push({ id: `${thing.atomId}-${position.account?.id}`, from: thing.atomId.toString(), to: position.account?.id.toString() });
+          edges.push({ id: `${thing.id}-${position.account?.id}`, from: thing.id.toString(), to: position.account?.id.toString() });
         });
 
         // Process asSubject triples
-        atom?.asSubject?.forEach(triple => {
+        atom?.as_subject_triples?.forEach(triple => {
           nodes.push({ id: triple.id.toString() });
-          edges.push({ id: `${thing.atomId}-${triple.id}`, from: thing.atomId.toString(), to: triple.id.toString() });
+          edges.push({ id: `${thing.id}-${triple.id}`, from: thing.id.toString(), to: triple.id.toString() });
 
           // Object
           nodes.push({ id: triple.object?.id.toString() });
@@ -90,10 +90,10 @@ export const Chat: React.FC = () => {
           edges.push({ id: `${triple.object?.id}-${triple.predicate?.id}`, from: triple.object?.id.toString(), to: triple.predicate?.id.toString() });
 
           // Subject
-          edges.push({ id: `${triple.predicate?.id}-${thing.atomId}`, from: triple.predicate?.id.toString(), to: thing.atomId.toString() });
+          edges.push({ id: `${triple.predicate?.id}-${thing.id}`, from: triple.predicate?.id.toString(), to: thing.id.toString() });
 
           // Process counterVault
-          const counterVault = triple.counterVault;
+          const counterVault = triple.counter_vault;
           counterVault?.positions?.forEach(position => {
             nodes.push({ id: position.account?.id.toString() });
             edges.push({ id: `${triple.id}-${position.account?.id}`, from: triple.id.toString(), to: position.account?.id.toString() });
@@ -143,27 +143,28 @@ export const Chat: React.FC = () => {
   }, [data]);
   useEffect(() => {
     if (data) {
-      const usd = data.chainLinkPrices[0].usd;
+      // const usd = data.chainLinkPrices[0].usd;
+      const usd = 3302.34864192; // hardcoded for now
       let systemMessage = 'You are an AI agent embedded in Intuition’s Google Chrome plugin, designed to provide users with concise, helpful insights about the website they are viewing. Your responses should be informed by data from the Intuition Knowledge Graph, including information on related atoms, semantic triples, the origins and reliability of claims, the staked value on each claim, user-generated tags, and any relationships between data points. \n Please follow these guidelines: \n 1. Conciseness: Keep responses short, ideally within 1-2 sentences, while maintaining clarity and helpfulness. \n 2. Contextual Relevance: Use only the most relevant data to answer each question, focusing on website reputation, user safety, related websites, or general sentiment. \n 3. Efficiency: Where possible, synthesize multiple data points into a single insight (e.g., ‘This website is widely considered reliable, with high-stake trust claims and positive safety tags’).\n 4. Do not show long account ids, when listing things.\n\n\n\nHere is the data from the intuition knowledge graph:';
       systemMessage += `\n\n Current user account: ${account} \n\n\n`;
 
       data.things?.forEach(thing => {
         systemMessage += `\# ${thing.name}`;
         systemMessage += `\n\n${thing.atom?.value?.thing?.description}`;
-        systemMessage += `\n\nID: did:i7n:84532:${thing.atomId}`;
+        systemMessage += `\n\nID: did:i7n:84532:${thing.id}`;
         systemMessage += `\n\n\n#### Claims: \n`;
-        thing.atom?.asSubject?.forEach(triple => {
-          systemMessage += ` - ${triple.label} \n`;
+        thing.atom?.as_subject_triples?.forEach(triple => {
+          systemMessage += ` - ${triple.subject.label} ${triple.predicate.label} ${triple.object.label} \n`;
           //positions
-          systemMessage += `  - For (${triple.vault?.positionCount}): \n`;
+          systemMessage += `  - For (${triple.vault?.position_count}): \n`;
           triple.vault?.positions?.forEach(position => {
-            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.vault?.currentSharePrice))) * usd;
+            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.vault?.current_share_price))) * usd;
             systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account?.label} Account: ${position.account?.id} \n`;
           });
           // counterVault
-          systemMessage += `  - Against (${triple.counterVault?.positionCount}): \n`;
-          triple.counterVault?.positions?.forEach(position => {
-            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.counterVault?.currentSharePrice))) * usd;
+          systemMessage += `  - Against (${triple.counter_vault?.position_count}): \n`;
+          triple.counter_vault?.positions?.forEach(position => {
+            const inUsd = parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(triple.counter_vault?.current_share_price))) * usd;
             systemMessage += `    - Position: ${inUsd.toFixed(2)} USD, Label: ${position.account?.label} Account: ${position.account?.id} \n`;
           });
         });
@@ -191,7 +192,8 @@ export const Chat: React.FC = () => {
       if (!data.account) {
         return "Account not found";
       }
-      const usd = data.chainLinkPrices[0].usd;
+      // const usd = data.chainLinkPrices[0].usd;
+      const usd = 3302.34864192; // hardcoded for now:w
 
       const result = {
         account_id: data.account.id,
@@ -199,8 +201,8 @@ export const Chat: React.FC = () => {
         positions: data.account.positions?.map((position) => {
           return {
             vaultId: position.vault?.id,
-            label: position.vault?.atom?.label || position.vault?.triple?.label,
-            stake: (parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(position.vault?.currentSharePrice))) * usd).toFixed(2) + " USD",
+            label: position.vault?.atom?.label || `${position.vault?.triple?.subject.label} ${position.vault?.triple?.predicate.label} ${position.vault?.triple?.object.label}`,
+            stake: (parseFloat(formatEther(BigInt(position.shares))) * parseFloat(formatEther(BigInt(position.vault?.current_share_price))) * usd).toFixed(2) + " USD",
           }
         }),
       };

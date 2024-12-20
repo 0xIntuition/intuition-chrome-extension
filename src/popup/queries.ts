@@ -3,7 +3,7 @@ import { gql } from '../generated/gql.js';
 export const getMyPositionQuery = gql(/* GraphQL */ `
 query GetMyPosition($id: numeric!, $address: String) {
   positions(
-    where: { accountId: { _eq: $address }, vaultId: { _eq: $id } }
+    where: { account_id: { _eq: $address }, vault_id: { _eq: $id } }
     limit: 1
   ) {
     shares
@@ -14,26 +14,27 @@ query GetMyPosition($id: numeric!, $address: String) {
 export const getThingsQuery = gql(/* GraphQL */ `
 query GetThings($url: String, $address: String) {
   things(where: { url: { _eq: $url } }) {
-    atomId
+    id
     url
     name
     image
     atom {
+      id
       value {
         thing {
           description
         }
       }
       vault {
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         myPosition: positions(
           limit: 1
-          where: { accountId: { _eq: $address } }
+          where: { account_id: { _eq: $address } }
         ) {
           shares
-          accountId
+          account_id
         }
         positions(order_by: { shares: desc }, limit: 5) {
           shares
@@ -45,7 +46,7 @@ query GetThings($url: String, $address: String) {
           }
         }
       }
-      asSubject {
+      as_subject_triples {
         id
         object {
           id
@@ -59,53 +60,49 @@ query GetThings($url: String, $address: String) {
           image
           id
         }
-        counterVault {
+        counter_vault {
           id
-          positionCount
-          totalShares
-          currentSharePrice
+          position_count
+          total_shares
+          current_share_price
           myPosition: positions(
             limit: 1
-            where: { accountId: { _eq: $address } }
+            where: { account_id: { _eq: $address } }
           ) {
             shares
-            accountId
+            account_id
           }
           positions {
             shares
-            accountId
+            account_id
           }
         }
         vault {
           id
-          positionCount
-          totalShares
-          currentSharePrice
+          position_count
+          total_shares
+          current_share_price
           myPosition: positions(
             limit: 1
-            where: { accountId: { _eq: $address } }
+            where: { account_id: { _eq: $address } }
           ) {
             shares
-            accountId
+            account_id
           }
           positions {
             shares
-            accountId
+            account_id
           }
         }
       }
     }
   }
-  chainLinkPrices(limit: 1, order_by: { id: desc }) {
-    usd
-  }
-}
-`);
+}`);
 
 export const getThingsExtendedQuery = gql(/* GraphQL */ `
 query GetThingsExtended($url: String) {
   things(where: { url: { _eq: $url } }) {
-    atomId
+    id
     url
     name
     image
@@ -116,9 +113,9 @@ query GetThingsExtended($url: String) {
         }
       }
       vault {
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         positions {
           shares
           account {
@@ -129,9 +126,14 @@ query GetThingsExtended($url: String) {
           }
         }
       }
-      asSubject {
+      as_subject_triples {
         id
-        label
+        subject {
+          id
+          label
+          emoji
+          image
+        }
         object {
           id
           label
@@ -144,11 +146,11 @@ query GetThingsExtended($url: String) {
           image
           id
         }
-        counterVault {
+        counter_vault {
           id
-          positionCount
-          totalShares
-          currentSharePrice
+          position_count
+          total_shares
+          current_share_price
           positions {
             shares
             account {
@@ -159,9 +161,9 @@ query GetThingsExtended($url: String) {
         }
         vault {
           id
-          positionCount
-          totalShares
-          currentSharePrice
+          position_count
+          total_shares
+          current_share_price
           positions {
             shares
             account {
@@ -173,22 +175,18 @@ query GetThingsExtended($url: String) {
       }
     }
   }
-
-  chainLinkPrices(limit: 1, order_by: { id: desc }) {
-    usd
-  }
 }
 `);
 
 export const getMyPositionsQuery = gql(/* GraphQL */ `
 query GetMyPositions($address: String) {
-  positions(where: { accountId: { _eq: $address } }) {
+  positions(where: { account_id: { _eq: $address } }) {
     id
     shares
     vault {
-      positionCount
-      totalShares
-      currentSharePrice
+      position_count
+      total_shares
+      current_share_price
       atom {
         id
         label
@@ -196,7 +194,6 @@ query GetMyPositions($address: String) {
       }
       triple {
         id
-        label
         subject {
           id
           image
@@ -226,7 +223,7 @@ query GetMyPositions($address: String) {
 export const searchAtomsQuery = gql(/* GraphQL */ `
 query SearchAtoms($label: String!) {
   atoms(
-    order_by: { blockTimestamp: desc }
+    order_by: { block_timestamp: desc }
     limit: 30
     where: {
       type: { _in: ["Thing", "Person", "Organization"] }
@@ -257,14 +254,14 @@ query GetAccountInfo($address: String!) {
     image
     label
     id
-    positions(where: { accountId: { _eq: $address } }) {
+    positions(where: { account_id: { _eq: $address } }) {
       id
       shares
       vault {
         id
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         atom {
           id
           label
@@ -272,7 +269,6 @@ query GetAccountInfo($address: String!) {
         }
         triple {
           id
-          label
           subject {
             id
             image
@@ -292,9 +288,6 @@ query GetAccountInfo($address: String!) {
       }
     }
   }
-  chainLinkPrices(limit: 1, order_by: { id: desc }) {
-    usd
-  }
 }
 `);
 
@@ -302,15 +295,14 @@ export const getClaimsFromFollowingAboutSubject = gql(/* GraphQL */ `
 query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
   claims_from_following(
     args: { address: $address }
-    where: { subjectId: { _eq: $subjectId } }
+    where: { subject_id: { _eq: $subjectId } }
   ) {
     shares
-    counterShares
+    counter_shares
     triple {
       id
-      vaultId
-      counterVaultId
-      label
+      vault_id
+      counter_vault_id
       subject {
         emoji
         label
@@ -329,30 +321,30 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
         image
         id
       }
-      counterVault {
+      counter_vault {
         id
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         myPosition: positions(
           limit: 1
-          where: { accountId: { _eq: $address } }
+          where: { account_id: { _eq: $address } }
         ) {
           shares
-          accountId
+          account_id
         }
       }
       vault {
         id
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         myPosition: positions(
           limit: 1
-          where: { accountId: { _eq: $address } }
+          where: { account_id: { _eq: $address } }
         ) {
           shares
-          accountId
+          account_id
         }
       }
     }
@@ -365,7 +357,7 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
 `);
 
 export const searchAtomsByUriQuery = gql(/* GraphQL */ `
-  query SearchAtomsByUri($uri: String, $address: String) {
+query SearchAtomsByUri($uri: String, $address: String) {
   atoms(
     where: {
       _or: [
@@ -405,12 +397,12 @@ export const searchAtomsByUriQuery = gql(/* GraphQL */ `
       }
     }
     vault {
-      positionCount
-      totalShares
-      currentSharePrice
-      myPosition: positions(limit: 1, where: { accountId: { _eq: $address } }) {
+      position_count
+      total_shares
+      current_share_price
+      myPosition: positions(limit: 1, where: { account_id: { _eq: $address } }) {
         shares
-        accountId
+        account_id
       }
       positions(order_by: { shares: desc }, limit: 5) {
         shares
@@ -422,7 +414,7 @@ export const searchAtomsByUriQuery = gql(/* GraphQL */ `
         }
       }
     }
-    asSubject {
+    as_subject_triples {
       id
       object {
         id
@@ -436,44 +428,40 @@ export const searchAtomsByUriQuery = gql(/* GraphQL */ `
         image
         id
       }
-      counterVault {
+      counter_vault {
         id
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         myPosition: positions(
           limit: 1
-          where: { accountId: { _eq: $address } }
+          where: { account_id: { _eq: $address } }
         ) {
           shares
-          accountId
+          account_id
         }
         positions {
           shares
-          accountId
+          account_id
         }
       }
       vault {
         id
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         myPosition: positions(
           limit: 1
-          where: { accountId: { _eq: $address } }
+          where: { account_id: { _eq: $address } }
         ) {
           shares
-          accountId
+          account_id
         }
         positions {
           shares
-          accountId
+          account_id
         }
       }
     }
   }
-  chainLinkPrices(limit: 1, order_by: { id: desc }) {
-    usd
-  }
-}
-`);
+}`);

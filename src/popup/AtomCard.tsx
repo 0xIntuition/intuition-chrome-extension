@@ -34,12 +34,12 @@ export interface Atom {
     };
   } | null;
   vault?: {
-    positionCount: number;
-    totalShares: string;
-    currentSharePrice: string;
+    position_count: number;
+    total_shares: string;
+    current_share_price: string;
     myPosition: Array<{
       shares: string;
-      accountId: string;
+      account_id: string;
     }>;
     positions: Array<{
       shares: string;
@@ -51,7 +51,7 @@ export interface Atom {
       };
     }>;
   } | null;
-  asSubject: Array<{
+  as_subject_triples: Array<{
     id: string;
     object: {
       id: string;
@@ -65,32 +65,32 @@ export interface Atom {
       image?: string;
       id: string;
     };
-    counterVault: {
+    counter_vault: {
       id: string;
-      positionCount: number;
-      totalShares: string;
-      currentSharePrice: string;
+      position_count: number;
+      total_shares: string;
+      current_share_price: string;
       myPosition: Array<{
         shares: string;
-        accountId: string;
+        account_id: string;
       }>;
       positions: Array<{
         shares: string;
-        accountId: string;
+        account_id: string;
       }>;
     };
     vault: {
       id: string;
-      positionCount: number;
-      totalShares: string;
-      currentSharePrice: string;
+      position_count: number;
+      total_shares: string;
+      current_share_price: string;
       myPosition: Array<{
         shares: string;
-        accountId: string;
+        account_id: string;
       }>;
       positions: Array<{
         shares: string;
-        accountId: string;
+        account_id: string;
       }>;
     };
   }>;
@@ -127,8 +127,8 @@ export const AtomCard: React.FC<AtomCardProps> = ({
 
   type Triple = {
     id: string,
-    vaultId: string,
-    counterVaultId: string,
+    vault_id: string,
+    counter_vault_id: string,
     label: string,
     subject: {
       emoji: string,
@@ -179,17 +179,17 @@ export const AtomCard: React.FC<AtomCardProps> = ({
   });
 
   const myPosition = atom.vault?.myPosition[0]?.shares;
-  const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(atom.vault?.currentSharePrice || 0)));
-  const totalStaked = parseFloat(formatEther(BigInt(atom.vault?.totalShares || 0)))
-    * parseFloat(formatEther(BigInt(atom.vault?.currentSharePrice || 0)));
+  const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(atom.vault?.current_share_price || 0)));
+  const totalStaked = parseFloat(formatEther(BigInt(atom.vault?.total_shares || 0)))
+    * parseFloat(formatEther(BigInt(atom.vault?.current_share_price || 0)));
 
-  const tags = atom.asSubject?.filter((item) => item.predicate?.id === '4') || [];
-  const numberOfRemainingPositions = !atom.vault?.positionCount || atom.vault?.positionCount <= 5 ? '' : `+${atom.vault?.positionCount - 5}`;
+  const tags = atom.as_subject_triples?.filter((item) => item.predicate?.id === '4') || [];
+  const numberOfRemainingPositions = !atom.vault?.position_count || atom.vault?.position_count <= 5 ? '' : `+${atom.vault?.position_count - 5}`;
 
   const handleLocalTagSelected = async (tag: any, atomId: number) => {
     setSelectedTag(tag);
     setShowTagSearch(false);
-    await handleTagSelected(tag, atomId);
+    handleTagSelected(tag, atomId);
     setTimeout(() => setSelectedTag(null), 1000);
   };
 
@@ -223,7 +223,7 @@ export const AtomCard: React.FC<AtomCardProps> = ({
         <p className="text-sm text-slate-300 mt-2">{description}</p>
         <div className="flex flex-row mt-3 space-x-1">
           <button
-            title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${atom.vault?.positionCount || 0 - 1} accounts \n My position: ${myPositionInEth.toFixed(6)} ETH (${(myPositionInEth * usd).toFixed(2)} USD)`}
+            title={`Total staked: ${totalStaked.toFixed(6)} ETH (${(totalStaked * usd).toFixed(2)} USD) by ${atom.vault?.position_count || 0 - 1} accounts \n My position: ${myPositionInEth.toFixed(6)} ETH (${(myPositionInEth * usd).toFixed(2)} USD)`}
             onClick={() => handleAtomClick(atom.id, myPosition)}
             className={`space-x-1 flex flex-row items-center border border-sky-800 hover:bg-sky-700 text-green-100 text-xs p-1 px-2 rounded-full ${myPosition ? 'bg-sky-800' : 'bg-transparent'}`}>
             <span className="text-sm">✓</span>

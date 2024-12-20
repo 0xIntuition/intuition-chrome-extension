@@ -22,18 +22,18 @@ interface TagProps {
     } | null;
     vault?: {
       id: string;
-      positionCount: number;
-      totalShares: string;
-      currentSharePrice: string;
+      position_count: number;
+      total_shares: string;
+      current_share_price: string;
       myPosition: {
         shares: string;
       }[];
     } | null;
-    counterVault?: {
+    counter_vault?: {
       id: string;
-      positionCount: number;
-      totalShares: string;
-      currentSharePrice: string;
+      position_count: number;
+      total_shares: string;
+      current_share_price: string;
       myPosition: {
         shares: string;
       }[];
@@ -46,15 +46,15 @@ export const Tag: React.FC<TagProps> = ({ tag, account, refetch, claimsForCount,
   const [bgClass, setBgClass] = useState('bg-transparent border-slate-800');
   const [loading, setLoading] = useState(false);
   const myPosition = tag.vault?.myPosition[0]?.shares;
-  const myCounterPosition = tag.counterVault?.myPosition[0]?.shares;
+  const myCounterPosition = tag.counter_vault?.myPosition[0]?.shares;
 
-  const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(tag.vault?.currentSharePrice || 0)));
-  const totalStaked = parseFloat(formatEther(BigInt(tag.vault?.totalShares || 0)))
-    * parseFloat(formatEther(BigInt(tag.vault?.currentSharePrice || 0)))
-    + parseFloat(formatEther(BigInt(tag.counterVault?.totalShares || 0)))
-    * parseFloat(formatEther(BigInt(tag.counterVault?.currentSharePrice || 0)))
+  const myPositionInEth = parseFloat(formatEther(BigInt(myPosition || 0))) * parseFloat(formatEther(BigInt(tag.vault?.current_share_price || 0)));
+  const totalStaked = parseFloat(formatEther(BigInt(tag.vault?.total_shares || 0)))
+    * parseFloat(formatEther(BigInt(tag.vault?.current_share_price || 0)))
+    + parseFloat(formatEther(BigInt(tag.counter_vault?.total_shares || 0)))
+    * parseFloat(formatEther(BigInt(tag.counter_vault?.current_share_price || 0)))
     ;
-  const totalPositionCount = (tag.vault?.positionCount || 0) + (tag.counterVault?.positionCount || 0);
+  const totalPositionCount = (tag.vault?.position_count || 0) + (tag.counter_vault?.position_count || 0);
 
   const handleTagClick = (isCounterVault: boolean) => {
     if (myPosition) {
@@ -64,13 +64,13 @@ export const Tag: React.FC<TagProps> = ({ tag, account, refetch, claimsForCount,
       }
     } else if (myCounterPosition) {
       setBgClass('bg-rose-900 border-rose-900')
-      if (tag.counterVault?.id) {
-        redeemTriple(tag.counterVault.id, myCounterPosition);
+      if (tag.counter_vault?.id) {
+        redeemTriple(tag.counter_vault.id, myCounterPosition);
       }
     } else if (isCounterVault) {
       setBgClass('bg-rose-900 border-rose-900')
-      if (tag.counterVault?.id) {
-        depositTriple(tag.counterVault.id);
+      if (tag.counter_vault?.id) {
+        depositTriple(tag.counter_vault.id);
       }
     } else {
       setBgClass('bg-sky-800 border-slate-800')
@@ -115,7 +115,7 @@ export const Tag: React.FC<TagProps> = ({ tag, account, refetch, claimsForCount,
           />
         )}
         <span className="text-xs text-slate-200 ml-2 ">{tag.predicate?.id === '4' ? '' : tag.predicate?.label} {tag.object?.label}</span>
-        <span className="text-xs text-slate-200 ">{claimsForCount || tag.vault?.positionCount}</span>
+        <span className="text-xs text-slate-200 ">{claimsForCount || tag.vault?.position_count}</span>
       </button>
       <button
         disabled={loading}
@@ -123,7 +123,7 @@ export const Tag: React.FC<TagProps> = ({ tag, account, refetch, claimsForCount,
         onMouseEnter={() => setBgClass('bg-rose-900 border-rose-900')}
         onMouseLeave={() => setBgClass('bg-transparent border-slate-800')}
         className="text-rose-400 hover:text-rose-200 text-xs px-2 flex h-7 items-center space-x-2 ">
-        {claimsAgainstCount || tag.counterVault?.positionCount}
+        {claimsAgainstCount || tag.counter_vault?.position_count}
       </button>
     </div>
   );
