@@ -14,9 +14,8 @@ const NavLink: React.FC<{ to: string, children: React.ReactNode }> = ({ to, chil
   return (
     <Link
       to={to}
-      className={`px-4 py-2 rounded-md  ${
-        isActive ? ' text-white opacity-100' : 'hover:text-white opacity-40 text-white hover:opacity-100'
-      }`}
+      className={`px-4 py-2 rounded-md  ${isActive ? ' text-white opacity-100' : 'hover:text-white opacity-40 text-white hover:opacity-100'
+        }`}
     >
       {children}
     </Link>
@@ -43,12 +42,6 @@ const MeIcon: React.FC = () => (
 export const App: React.FC = () => {
   const [account, setAccount] = useState<Address | undefined>(undefined);
   const { graphData } = useGraphData();
-    useEffect(() => {
-    const pinataApiKey = localStorage.getItem('pinataApiKey');
-    if (!pinataApiKey) {
-      localStorage.setItem('pinataApiKey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4NmJhNGFkNy1kMTg0LTQ3MGItYjIzOS1kZDk4ODAwMTk3NTgiLCJlbWFpbCI6ImJpbGx5QGludHVpdGlvbi5zeXN0ZW1zIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiRlJBMSJ9LHsiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiTllDMSJ9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjI4NGRkZTViNjM5ZDdkOWU5MmI2Iiwic2NvcGVkS2V5U2VjcmV0IjoiNGYwOTM0YjM4NjAwOWI4MjgwMGNkMDE4YzZhMWQ1ZjA0MmFmY2Y5OWUyNDVhY2U2ODM1YjFjOWE2OWQzYWJmMyIsImV4cCI6MTc1ODYyNDQyNH0.9n7-XOh6Q2IycJP7uweZCtsL4eqLHimsyBqf73Y8QgU');
-    }
-  }, []);
   useEffect(() => {
     const cachedAccount = localStorage.getItem('account');
     if (cachedAccount) {
@@ -76,26 +69,26 @@ export const App: React.FC = () => {
             </div>
             <div className="flex flex-row ">
 
-            <NavLink to="/me">
-                {data && data.account && ( <img
+              <NavLink to="/me">
+                {data && data.account && (<img
                   src={data.account.image || blo(data.account.id as `0x${string}`)}
                   width={24}
                   height={24}
                   className="rounded-full object-cover object-center"
                 />)}
                 {!data?.account && <MeIcon />}
-            </NavLink>
+              </NavLink>
             </div>
           </div>
           <canvas id="viz" className="focus:outline-none h-32 w-full"></canvas>
         </nav>
         <div className="mt-4">
           <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/me" element={<Me />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/me" element={<Me />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </div>
       </div>
     </Router>

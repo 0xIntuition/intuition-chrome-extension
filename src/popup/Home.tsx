@@ -77,7 +77,7 @@ export const Home: React.FC = () => {
         });
 
         // Process asSubject triples
-        atom?.asSubject?.forEach(triple => {
+        atom?.as_subject_triples?.forEach(triple => {
           nodes.push({ id: triple.id.toString() });
           edges.push({ id: `${atom.id}-${triple.id}`, from: atom.id.toString(), to: triple.id.toString() });
 
@@ -93,17 +93,17 @@ export const Home: React.FC = () => {
           edges.push({ id: `${triple.predicate?.id}-${atom.id}`, from: triple.predicate?.id.toString(), to: atom.id.toString() });
 
           // Process counterVault
-          const counterVault = triple.counterVault;
+          const counterVault = triple.counter_vault;
           counterVault?.positions?.forEach(position => {
-            nodes.push({ id: position.accountId.toString() });
-            edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
+            nodes.push({ id: position.account_id.toString() });
+            edges.push({ id: `${triple.id}-${position.account_id}`, from: triple.id.toString(), to: position.account_id.toString() });
           });
 
           // Process triple vault
           const tripleVault = triple.vault;
           tripleVault?.positions?.forEach(position => {
-            nodes.push({ id: position.accountId.toString() });
-            edges.push({ id: `${triple.id}-${position.accountId}`, from: triple.id.toString(), to: position.accountId.toString() });
+            nodes.push({ id: position.account_id.toString() });
+            edges.push({ id: `${triple.id}-${position.account_id}`, from: triple.id.toString(), to: position.account_id.toString() });
           });
 
         });
@@ -239,7 +239,8 @@ export const Home: React.FC = () => {
   if (!data?.atoms || data.atoms.length === 0 || showAtomForm) {
     return <AtomForm />;
   }
-  const usd = data.chainLinkPrices[0].usd;
+  // const usd = data.chainLinkPrices[0].usd;
+  const usd = 3302.34864192; // hardcoded for now:w
 
   return (<>
     {!showAtomForm && <div className="flex justify-end items-center p-2"><button

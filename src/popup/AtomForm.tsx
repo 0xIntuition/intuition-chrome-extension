@@ -1,35 +1,28 @@
 import OpenAI from "openai";
 import { useEffect, useState } from "react";
 import { Spinner } from "./Spinner";
-import { PinataSDK } from "pinata-web3"
 import { useMultiVault } from './intuition-react/useMultiVault.js';
 import { Address, Chain, isAddress, parseEther } from "viem";
 import { isSmartContract, supportedChains } from "./util";
+import { useMutation } from '@apollo/client';
+import { pinThingMutation } from "./queries";
 
 export const AtomForm = () => {
   const [chainId, setChainId] = useState<number | undefined>(undefined);
   const [type, setType] = useState<'url' | 'address' | 'caip10'>('url');
   const [uri, setUri] = useState<string | undefined>(undefined);
   const [openai, setOpenai] = useState<OpenAI | null>(null);
-  const [pinata, setPinata] = useState<PinataSDK | null>(null);
   const [account, setAccount] = useState<Address | undefined>(undefined);
   const [progressMessage, setProgressMessage] = useState<string | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const { multivault, client } = useMultiVault(account);
   const [creatingAtom, setCreatingAtom] = useState(false);
+  const [pinThing] = useMutation(pinThingMutation);
+
   useEffect(() => {
     const cachedAccount = localStorage.getItem('account');
     if (cachedAccount) {
       setAccount(cachedAccount as Address);
-    }
-  }, []);
-
-  useEffect(() => {
-    const pinataApiKey = localStorage.getItem('pinataApiKey');
-    if (pinataApiKey) {
-      setPinata(new PinataSDK({
-        pinataJwt: pinataApiKey,
-      }));
     }
   }, []);
 
@@ -121,21 +114,21 @@ export const AtomForm = () => {
     setCreatingAtom(true);
     if (type === 'url') {
       setProgressMessage('Uploading to IPFS...');
-      const json = {
-        '@context': 'https://schema.org',
-        '@type': 'Thing',
-        name: label,
-        description,
-        url: currentUrl,
-        image: image,
+      const result = await pinThing({
+        variables: {
+          thing: {
+            name: label,
+            description,
+            url: currentUrl,
+            image: image,
+          }
+        }
+      });
+
+      if (!result.data?.pinThing?.uri) {
+        throw new Error('Failed to pin thing');
       }
-      console.log(json);
-      const result = await pinata?.upload.json(json);
-      console.log(result);
-      if (!result) {
-        return;
-      }
-      finalUri = 'ipfs://' + result.IpfsHash;
+      finalUri = result.data.pinThing.uri;
     }
 
     try {

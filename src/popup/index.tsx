@@ -4,7 +4,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { GraphDataProvider } from './GraphDataContext';
 
 const client = new ApolloClient({
-  uri: 'https://api.i7n.app/v1/graphql',
+  uri: 'https://dev.base.intuition-api.com/v1/graphql',
   cache: new InMemoryCache(),
 });
 
