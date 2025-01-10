@@ -16,6 +16,11 @@ const buildOptions = {
   target: ['es2020'],
   format: 'esm',
   loader: { '.tsx': 'tsx' },
+  define: {
+    'process': 'process',
+    'Buffer': 'Buffer', 
+  },
+  inject: ['./shim.js']  
 };
 
 if (watchMode) {
